@@ -17,6 +17,20 @@ from django.contrib import admin
 from django.urls import include, path
 from demo.views import BookAPIView
 from rest_framework import routers
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+
+# swager文档
+schema_view = get_schema_view(
+    openapi.Info(
+        title="citi cup API",
+        default_version='v1.0',
+        description="测试工程接口文档",
+    ),
+    public=True,
+)
+
 
 router = routers.DefaultRouter()
 
@@ -26,5 +40,7 @@ router = routers.DefaultRouter()
 urlpatterns = [
     path('', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('books/',BookAPIView.as_view())
+    path('books/',BookAPIView.as_view()),
+    path('swagger/',schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger/$',schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui')
 ]
