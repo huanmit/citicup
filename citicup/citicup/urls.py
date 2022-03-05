@@ -19,6 +19,8 @@ from rest_framework import routers
 
 from thm.views import RegisterAPIView
 from zlh.views import UploadStepsAPIView
+from mxy.views import LoginAPIView,GetAllGoodsAPIView
+from lj.views import GoodAPIView,UserPageAPIView
 
 router = routers.DefaultRouter()
 
@@ -35,6 +37,10 @@ urlpatterns = [
     path('wxsteps_upload/',UploadStepsAPIView.as_view()),  #微信步数兑换
 
     # mxy's part
+    path('login/',LoginAPIView.as_view()), #用户登录
+    path('store/',GetAllGoodsAPIView.as_view()), #商城页面获取全部商品
 
     # lj's part
+    path('good/',GoodAPIView.as_view()), #商品详情页
+    path('user_page/',UserPageAPIView.as_view()), #用户个人页面
 ]
