@@ -17,7 +17,10 @@ class RegisterAPIView(APIView):
         userName = data['userName']
         password = data['password']
         phoneNumber = data['phoneNumber']
-        avatarPath = data['avatarPath']
+        try:
+            avatarPath = data['avatarPath']
+        except:
+            avatarPath = ""        
         carbonCurrency = 0
         carbonCredit = 0
         cursor = connection.cursor()
