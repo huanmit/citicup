@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from thm.views import RegisterAPIView
+from thm.views import RegisterAPIView, SearchFootprintAPIView
 from zlh.views import UploadStepsAPIView
 from mxy.views import LoginAPIView,GetAllGoodsAPIView,GoodTypeAPIView,CategorizedGoodAPIView
 from lj.views import GoodAPIView,UserPageAPIView
@@ -32,17 +32,17 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # thm's part，记得打逗号！
     path('register/',RegisterAPIView.as_view()), #用户注册
-
-    # zlh's part
+    path('search_footprint/',SearchFootprintAPIView.as_view()),
+    # zlh's part,记得打逗号！
     path('wxsteps_upload/',UploadStepsAPIView.as_view()),  #微信步数兑换
 
-    # mxy's part
+    # mxy's part,记得打逗号！
     path('login/',LoginAPIView.as_view()), #用户登录
     path('store/',GetAllGoodsAPIView.as_view()), #商城页面获取全部商品
     path('good_type/',GoodTypeAPIView.as_view()),#获取商城中的商品分类
     path('categorized_good/',CategorizedGoodAPIView.as_view()),#获取某个分类的所有商品
 
-    # lj's part
+    # lj's part,记得打逗号！
     path('good/',GoodAPIView.as_view()), #商品详情页
     path('user_page/',UserPageAPIView.as_view()), #用户个人页面
 ]

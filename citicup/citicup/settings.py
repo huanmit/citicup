@@ -86,7 +86,7 @@ DATABASES = {
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': 'Tanhuanmi',
-        'NAME': 'test',
+        'NAME': 'citicup',
     }
 }
 

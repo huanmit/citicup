@@ -33,3 +33,37 @@ class RegisterAPIView(APIView):
         print(type(res))
         response = JsonResponse({"status_code":res})
         return response
+
+class SearchFootprintAPIView(APIView):
+    def get(self,request):
+        data = request.query_params
+        user_id = data['user_id']
+        time = data['time']
+        print(user_id,time)
+
+        cursor = connection.cursor()
+        cursor.execute("select * from PlogType")
+        results=cursor.fetchall()
+        plogType = {}
+        for each in results:
+            id = str(each[0])
+            name = each[1]
+            plogType[id] = name
+
+        cursor.execute("select * from footprint where foottime>=%s and foottime<=%s",[time+" 00:00:00",time+" 23:59:59"])
+        results=cursor.fetchall()
+        cnt = len(results) #记录个数
+        list = []
+        for each in results:
+            dict = {}
+            name = plogType[str(each[2])]
+            dict["footprint_type_name"] = name
+            dict["carbon_currency"] = each[3]
+            dict["time"] = each[4]
+            list.append(dict)
+
+        response = JsonResponse(list,safe=False)
+        return response
+
+
+
