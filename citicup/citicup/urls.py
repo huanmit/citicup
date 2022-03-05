@@ -19,7 +19,7 @@ from rest_framework import routers
 
 from thm.views import RegisterAPIView
 from zlh.views import UploadStepsAPIView
-from mxy.views import LoginAPIView,GetAllGoodsAPIView
+from mxy.views import LoginAPIView,GetAllGoodsAPIView,GoodTypeAPIView,CategorizedGoodAPIView
 from lj.views import GoodAPIView,UserPageAPIView
 
 router = routers.DefaultRouter()
@@ -39,6 +39,8 @@ urlpatterns = [
     # mxy's part
     path('login/',LoginAPIView.as_view()), #用户登录
     path('store/',GetAllGoodsAPIView.as_view()), #商城页面获取全部商品
+    path('good_type/',GoodTypeAPIView.as_view()),#获取商城中的商品分类
+    path('categorized_good/',CategorizedGoodAPIView.as_view()),#获取某个分类的所有商品
 
     # lj's part
     path('good/',GoodAPIView.as_view()), #商品详情页
