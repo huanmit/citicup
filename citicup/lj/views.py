@@ -17,17 +17,20 @@ class GoodAPIView(APIView):
         data = request.query_params
         id = data.get('id', None)
         cursor = connection.cursor()
-        sql = "select id,goodName,goodDescription,goodCarbonCurrency,goodLeft,imagePath from good where id = %s"
+        sql = "select good.id,goodName,goodTypeName,goodDescription,goodCarbonCurrency,goodLeft,imagePath from good,goodtype where good.id =%s and good.goodType=goodtype.id"
         cursor.execute(sql, [id])
 
         connection.commit()
         results = cursor.fetchall()
-        result = results[0]
+        try:
+            result = results[0]
+        except:
+            return JsonResponse({"status_code":500})
 
         response = []
-        response.append({'id': result[0], 'goodName': result[1],
-                         'goodDescription': result[2], 'goodCarbonCurrency': result[3],
-                         'goodLeft': result[4], 'imagePath': result[5]})
+        response.append({'id': result[0], 'goodName': result[1],'goodType': result[2],
+                         'goodDescription': result[3], 'goodCarbonCurrency': result[4],
+                         'goodLeft': result[5], 'imagePath': result[6]})
         cursor.close()
         print(id)
         return JsonResponse(response, safe=False)
