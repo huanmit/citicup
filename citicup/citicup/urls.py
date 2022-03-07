@@ -18,7 +18,7 @@ from django.urls import include, path
 from rest_framework import routers
 
 from thm.views import RegisterAPIView, SearchFootprintAPIView, SearchExchangeAPIView
-from zlh.views import UploadStepsAPIView
+from zlh.views import UploadStepsAPIView,PostPlogAPIView,ExchangeGoodAPIView
 from mxy.views import LoginAPIView,GetAllGoodsAPIView,GoodTypeAPIView,CategorizedGoodAPIView
 from lj.views import GoodAPIView,UserPageAPIView,ReportAPIView
 
@@ -37,6 +37,8 @@ urlpatterns = [
 
     # zlh's part,记得打逗号！
     path('wxsteps_upload/',UploadStepsAPIView.as_view()),  #微信步数兑换
+    path('good_exchange/',ExchangeGoodAPIView.as_view()),  #商品兑换
+    path('plog_post/',PostPlogAPIView.as_view()),          #发布Plog
 
     # mxy's part,记得打逗号！
     path('login/',LoginAPIView.as_view()), #用户登录
