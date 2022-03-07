@@ -77,3 +77,37 @@ class UserPageAPIView(APIView):
 
         print(id)
         return JsonResponse(response, safe=False)
+
+class ReportAPIView(APIView):
+    def post(self,request):
+        cursor = connection.cursor()
+        data = request.data
+
+        userId = data['userId']
+        try: 
+            cursor.execute("select id from user where id=%s",[userId])
+            results = cursor.fetchall()[0]
+        except:
+             return JsonResponse({"status_code":500,"error_type":"找不到提出举报的用户"})
+
+        plogId = data['plogId']
+        try: 
+            cursor.execute("select id from plog where id=%s",[plogId])
+            results = cursor.fetchall()[0]
+        except:
+             return JsonResponse({"status_code":500,"error_type":"找不到被举报的帖子"}) 
+
+        connection.commit()
+
+        reportTime = data['reportTime']
+        reportContent = data['reportContent']
+        print(data)
+        
+        cursor.execute("insert into reports(userId,plogId,reportTime,reportContent) values(%s,%s,%s,%s)",[userId,plogId,reportTime,reportContent])
+        print(JsonResponse.status_code)
+        response = JsonResponse(data)
+        res = JsonResponse.status_code
+        response['Access-Control-Allow-Origin']='*'
+        print(type(res))
+        response = JsonResponse({"status_code":res})
+        return response

@@ -20,7 +20,7 @@ from rest_framework import routers
 from thm.views import RegisterAPIView, SearchFootprintAPIView
 from zlh.views import UploadStepsAPIView
 from mxy.views import LoginAPIView,GetAllGoodsAPIView,GoodTypeAPIView,CategorizedGoodAPIView
-from lj.views import GoodAPIView,UserPageAPIView
+from lj.views import GoodAPIView,UserPageAPIView,ReportAPIView
 
 router = routers.DefaultRouter()
 
@@ -45,4 +45,5 @@ urlpatterns = [
     # lj's part,记得打逗号！
     path('good/',GoodAPIView.as_view()), #商品详情页
     path('user_page/',UserPageAPIView.as_view()), #用户个人页面
+    path('report/',ReportAPIView.as_view()), #举报
 ]
