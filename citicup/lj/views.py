@@ -99,11 +99,10 @@ class ReportAPIView(APIView):
 
         connection.commit()
 
-        reportTime = data['reportTime']
         reportContent = data['reportContent']
         print(data)
         
-        cursor.execute("insert into reports(userId,plogId,reportTime,reportContent) values(%s,%s,%s,%s)",[userId,plogId,reportTime,reportContent])
+        cursor.execute("insert into reports(userId,plogId,reportContent) values(%s,%s,%s)",[userId,plogId,reportContent])
         print(JsonResponse.status_code)
         response = JsonResponse(data)
         res = JsonResponse.status_code
