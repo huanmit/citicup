@@ -91,3 +91,17 @@ class SearchExchangeAPIView(APIView):
         response = JsonResponse(list,safe=False)
         return response
 
+class LikeAPIView(APIView):
+    def post(self,request):
+        data = request.data
+        user_id = data['user_id']
+        plog_id = data['plog_id']
+
+        cursor = connection.cursor()
+        cursor.execute("insert into likes (userid,plogid) values(%s,%s)",[user_id,plog_id])
+        
+        response = JsonResponse(data)
+        res = JsonResponse.status_code
+        response['Access-Control-Allow-Origin']='*'
+        response = JsonResponse({"status_code":res})
+        return response 

@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from thm.views import RegisterAPIView, SearchFootprintAPIView, SearchExchangeAPIView
+from thm.views import RegisterAPIView, SearchFootprintAPIView, SearchExchangeAPIView, LikeAPIView
 from zlh.views import UploadStepsAPIView,PostPlogAPIView,ExchangeGoodAPIView
 from mxy.views import LoginAPIView,GetAllGoodsAPIView,GoodTypeAPIView,CategorizedGoodAPIView
 from lj.views import GoodAPIView,UserPageAPIView,ReportAPIView
@@ -33,7 +33,8 @@ urlpatterns = [
     # thm's part，记得打逗号！
     path('register/',RegisterAPIView.as_view()), #用户注册
     path('search_footprint/',SearchFootprintAPIView.as_view()), #查询某天碳足迹
-    path('search_exchanges/',SearchExchangeAPIView.as_view()), #查询某天兑换记录    
+    path('search_exchanges/',SearchExchangeAPIView.as_view()), #查询某天兑换记录 
+    path('like/',LikeAPIView.as_view()), #点赞plog   
 
     # zlh's part,记得打逗号！
     path('wxsteps_upload/',UploadStepsAPIView.as_view()),  #微信步数兑换
