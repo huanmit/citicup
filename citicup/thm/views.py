@@ -43,7 +43,7 @@ class SearchFootprintAPIView(APIView):
 
         cursor = connection.cursor()
         cursor.execute("select * from PlogType")
-        results=cursor.fetchall()
+        results = cursor.fetchall()
         plogType = {}
         for each in results:
             id = str(each[0])
@@ -65,5 +65,29 @@ class SearchFootprintAPIView(APIView):
         response = JsonResponse(list,safe=False)
         return response
 
+class SearchExchangeAPIView(APIView):
+    def get(self,request):
+        data = request.query_params
+        user_id = data['user_id']
+        time = data['time']
 
+        cursor = connection.cursor()
+        cursor.execute("select goodid from Exchanges where userid=%s",[user_id])
+        results = cursor.fetchall()
+        # 没有记录
+        if len(results) == 0:
+            return JsonResponse({})
+        # 有记录
+        list = []
+        for each in results:
+            good_id = each[0]
+            cursor.execute("select * from good where id=%s",[good_id])
+            results = cursor.fetchall()
+            good_name = results[0][1]
+            good_price = results[0][-3] 
+            dict = {"good_name":good_name, "good_price":good_price} 
+            list.append(dict)
+
+        response = JsonResponse(list,safe=False)
+        return response
 
