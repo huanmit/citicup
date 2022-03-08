@@ -150,7 +150,7 @@ class PlogTypeAPIView(APIView):
         else:
             return JsonResponse({"status_code":res})
 
-#获取某个分类的所有商品
+#获取某个分类的所有帖子
 class CategorizedPlogAPIView(APIView):
     def get(self,request):
         data = request.query_params
