@@ -50,7 +50,7 @@ class SearchFootprintAPIView(APIView):
             name = each[1]
             plogType[id] = name
 
-        cursor.execute("select * from footprint where foottime>=%s and foottime<=%s",[time+" 00:00:00",time+" 23:59:59"])
+        cursor.execute("select * from footprint where userid=%s and foottime>=%s and foottime<=%s",[user_id,time+" 00:00:00",time+" 23:59:59"])
         results=cursor.fetchall()
         cnt = len(results) #记录个数
         list = []
@@ -72,7 +72,7 @@ class SearchExchangeAPIView(APIView):
         time = data['time']
 
         cursor = connection.cursor()
-        cursor.execute("select goodid from Exchanges where userid=%s",[user_id])
+        cursor.execute("select goodid from Exchanges where userid=%s and exchangetime>=%s and exchangetime<=%s",[user_id,time+" 00:00:00",time+" 23:59:59"])
         results = cursor.fetchall()
         # 没有记录
         if len(results) == 0:
