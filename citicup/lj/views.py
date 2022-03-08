@@ -110,3 +110,36 @@ class ReportAPIView(APIView):
         print(type(res))
         response = JsonResponse({"status_code":res})
         return response
+
+class CommentAPIView(APIView):
+    def post(self,request):
+        cursor = connection.cursor()
+        data = request.data
+
+        userId = data['userId']
+        try: 
+            cursor.execute("select id from user where id=%s",[userId])
+            results = cursor.fetchall()[0]
+        except:
+             return JsonResponse({"status_code":500,"error_type":"找不到发出评论的用户"})
+
+        plogId = data['plogId']
+        try: 
+            cursor.execute("select id from plog where id=%s",[plogId])
+            results = cursor.fetchall()[0]
+        except:
+             return JsonResponse({"status_code":500,"error_type":"找不到被评论的帖子"}) 
+
+        connection.commit()
+
+        commentContent = data['commentContent']
+        print(data)
+        
+        cursor.execute("insert into comment(userId,plogId,commentContent) values(%s,%s,%s)",[userId,plogId,commentContent])
+        print(JsonResponse.status_code)
+        response = JsonResponse(data)
+        res = JsonResponse.status_code
+        response['Access-Control-Allow-Origin']='*'
+        print(type(res))
+        response = JsonResponse({"status_code":res})
+        return response        
