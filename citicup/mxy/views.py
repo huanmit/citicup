@@ -177,3 +177,44 @@ class CategorizedPlogAPIView(APIView):
             return response
         else:
             return JsonResponse({"status_code":res})
+
+#查看某条帖子详情页
+class GetPlogDetailsAPIView(APIView):
+    def get(self,request):
+        data = request.query_params
+        plogID=data['plogID']
+        cursor = connection.cursor()
+        cursor.execute("select count(plogID) from likes where plogID=%s",[plogID])
+        likesNum=cursor.fetchone()
+        cursor.execute("select id,userID,plogTypeID,imagePath,creatTime,plogName,plogContent from plog where id=%s",[plogID])
+        plogDetail=cursor.fetchone()
+        cursor.execute("select id,plogID,userID,creatTime,commentContent from comment where plogId=%s",[plogID])
+        comment=cursor.fetchall()
+        comment_list=[]      
+        for commentContent in comment:
+            comment_item={}
+            comment_item["id"]=commentContent[0]
+            comment_item["plogID"]=commentContent[1]
+            comment_item["userID"]=commentContent[2]
+            comment_item["creatTime"]=commentContent[3]
+            comment_item["commentContent"]=commentContent[4]
+            comment_list.append(comment_item)
+        detail_list=[]
+        detail_item={}
+        detail_item["id"]= plogDetail[0]
+        detail_item["userID"]= plogDetail[1]
+        detail_item["plogTypeID"]= plogDetail[2]
+        detail_item["imagePath"]=plogDetail[3]
+        detail_item["creatTime"]=plogDetail[4]
+        detail_item["plogName"]=plogDetail[5]
+        detail_item["plogContent"]=plogDetail[6]
+        detail_item["plogComment"]=comment_list
+        detail_item["likesNum"]=likesNum
+        detail_list.append(detail_item)
+        cursor.close()
+        res = JsonResponse.status_code
+        if res==200:
+            response = JsonResponse(detail_list,safe=False)
+            return response
+        else:
+            return JsonResponse({"status_code":res}) 
