@@ -143,3 +143,25 @@ class CommentAPIView(APIView):
         print(type(res))
         response = JsonResponse({"status_code":res})
         return response        
+
+class UserPlogAPIView(APIView):
+    def get(self, request):
+        data = request.query_params
+        id = data.get('userId', None)
+        cursor = connection.cursor()
+        sql = "select id,plogTypeId,imagePath,creatTime,plogName,plogContent from plog where userId = %s ORDER BY creatTime DESC"
+        cursor.execute(sql, [id])
+
+        connection.commit()
+        results = cursor.fetchall()
+        try:
+            results[0]
+        except:
+            return JsonResponse({"status_code":500})
+           
+        response = []
+        for result in results:
+            response.append({'id': result[0], 'plogTypeId': result[1],'imagePath': result[2],
+                            'creatTime': result[3], 'plogName': result[4],
+                            'plogContent': result[5]})
+        return JsonResponse(response, safe=False)

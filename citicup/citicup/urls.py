@@ -20,7 +20,7 @@ from rest_framework import routers
 from thm.views import RegisterAPIView, SearchFootprintAPIView, SearchExchangeAPIView, LikeAPIView
 from zlh.views import UploadStepsAPIView,PostPlogAPIView,ExchangeGoodAPIView
 from mxy.views import LoginAPIView,GetAllGoodsAPIView,GoodTypeAPIView,CategorizedGoodAPIView,GetAllPlogAPIView,PlogTypeAPIView,CategorizedPlogAPIView
-from lj.views import GoodAPIView,UserPageAPIView,ReportAPIView,CommentAPIView
+from lj.views import GoodAPIView,UserPageAPIView,ReportAPIView,CommentAPIView,UserPlogAPIView
 
 router = routers.DefaultRouter()
 
@@ -55,4 +55,5 @@ urlpatterns = [
     path('user_page/',UserPageAPIView.as_view()), #用户个人页面
     path('report/',ReportAPIView.as_view()), #举报
     path('comment/',CommentAPIView.as_view()), #评论
+    path('user_plogs/',UserPlogAPIView.as_view()), #用户发过的所有帖子
 ]
