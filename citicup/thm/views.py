@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.views import APIView
-
+from thm.achievements import walker
 
 class RegisterAPIView(APIView):
     def post(self,request):
@@ -105,3 +105,13 @@ class LikeAPIView(APIView):
         response['Access-Control-Allow-Origin']='*'
         response = JsonResponse({"status_code":res})
         return response 
+
+class Achievements(APIView):
+    def get(self,request):
+        data = request.query_params
+        user_id = data['user_id']
+        bronze_wa = walker(user_id)
+        # walk
+
+        #return JsonResponse([walk,2,3],safe=False)
+        return JsonResponse([{1:bronze_wa},{2:bronze_wa},{3:bronze_wa},{4:bronze_wa},{5:bronze_wa},{6:bronze_wa},{7:bronze_wa},{8:bronze_wa},{9:bronze_wa},{10:bronze_wa}],safe = False)
