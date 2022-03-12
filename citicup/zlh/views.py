@@ -93,4 +93,117 @@ class PostPlogAPIView(APIView):
         print(response)
         return response
 
+# 消息列表_comment
+class CommentMessageAPIView(APIView):
+    def get(self,request):
+        data = request.query_params
+        userID = data['userID']
+
+        # 当用户点击查看我的消息列表时，首先根据用户id查找他发布过的帖子
+        cursor = connection.cursor()
+        cursor.execute("select id from Plog where userID=%s",[userID])
+        results = cursor.fetchall() #该用户发布过的所有plog的id
+        print("results:",results)
+
+        if len(results) == 0 : #该用户未发布过plog
+            response = JsonResponse({"status_code":500,"error_type":"您暂时没有消息噢！"})
         
+        
+        if len(results) > 0 :
+            cursor.execute("select * from Comment where plogID in %s",[results])
+            commentInfo = cursor.fetchall()
+            
+            comment_list = []
+            for c in commentInfo:
+                comment_item = {}
+                comment_item["id"] = c[0]
+                comment_item["plogID"] = c[1]
+                comment_item["userID"] = c[2]
+                comment_item["createTime"] = c[3]
+                comment_item["commentContent"] = c[4]
+                comment_list.append(comment_item)
+     
+        res = JsonResponse.status_code
+        if res==200:
+            response = JsonResponse(comment_list,safe=False)
+
+        else:
+            response = JsonResponse({"status_code":res})
+        
+        return response
+
+# 消息列表_like
+class LikeMessageAPIView(APIView):
+    def get(self,request):
+        data = request.query_params
+        userID = data['userID']
+
+        # 当用户点击查看我的消息列表时，首先根据用户id查找他发布过的帖子
+        cursor = connection.cursor()
+        cursor.execute("select id from Plog where userID=%s",[userID])
+        results = cursor.fetchall() #该用户发布过的所有plog的id
+        print("results:",results)
+
+        if len(results) == 0 : #该用户未发布过plog
+            response = JsonResponse({"status_code":500,"error_type":"您暂时没有消息噢！"})
+        
+        
+        if len(results) > 0 :
+            cursor.execute("select * from Likes where plogID in %s",[results])
+            likeInfo = cursor.fetchall()
+            
+            like_list = []
+            for l in likeInfo:
+                like_item = {}
+                like_item["userID"] = l[0]
+                like_item["likeTime"] = l[1]
+                like_item["plogID"] = l[2]
+                like_list.append(like_item)
+            
+        res = JsonResponse.status_code
+        if res==200:
+            response = JsonResponse(like_list,safe=False)
+
+        else:
+            response = JsonResponse({"status_code":res})
+        
+        return response
+
+# 消息列表_report
+class ReportMessageAPIView(APIView):
+    def get(self,request):
+        data = request.query_params
+        userID = data['userID']
+
+        # 当用户点击查看我的消息列表时，首先根据用户id查找他发布过的帖子
+        cursor = connection.cursor()
+        cursor.execute("select id from Plog where userID=%s",[userID])
+        results = cursor.fetchall() #该用户发布过的所有plog的id
+        print("results:",results)
+
+        if len(results) == 0 : #该用户未发布过plog
+            response = JsonResponse({"status_code":500,"error_type":"您暂时没有消息噢！"})
+        
+        
+        if len(results) > 0 :
+            cursor.execute("select * from Reports where plogID in %s",[results])
+            reportInfo = cursor.fetchall()
+                  
+            report_list = []
+            for r in reportInfo:
+                report_item = {}
+                report_item["id"] = r[0]
+                report_item["userID"] = r[1]
+                report_item["plogID"] = r[2]
+                report_item["reportTime"] = r[3]
+                report_item["reportContent"] = r[4]
+                report_list.append(report_item)
+      
+        res = JsonResponse.status_code
+        if res==200:
+            response = JsonResponse(report_list,safe=False)
+
+        else:
+            response = JsonResponse({"status_code":res})
+        
+        return response 
