@@ -18,7 +18,7 @@ from django.urls import include, path
 from rest_framework import routers
 
 from thm.views import RegisterAPIView, SearchFootprintAPIView, SearchExchangeAPIView, LikeAPIView, Achievements
-from zlh.views import UploadStepsAPIView,PostPlogAPIView,ExchangeGoodAPIView,CommentAPIView,LikeAPIView,ReportAPIView
+from zlh.views import UploadStepsAPIView,PostPlogAPIView,ExchangeGoodAPIView,CommentMessageAPIView,LikeMessageAPIView,ReportMessageAPIView
 from mxy.views import LoginAPIView,GetAllGoodsAPIView,GoodTypeAPIView,CategorizedGoodAPIView,GetAllPlogAPIView,PlogTypeAPIView,CategorizedPlogAPIView,GetPlogDetailsAPIView
 from lj.views import GoodAPIView,UserPageAPIView,ReportAPIView,CommentAPIView,UserPlogAPIView
 
