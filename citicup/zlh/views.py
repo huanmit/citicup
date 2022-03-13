@@ -86,9 +86,10 @@ class PostPlogAPIView(APIView):
         plogContent = data['plogContent']
 
         cursor = connection.cursor()
+        coin = float(99)
         cursor.execute("insert into Plog(userID,plogTypeID,imagePath,plogName,plogContent) values(%s,%s,%s,%s,%s)",[userID,plogTypeID,imagePath,plogName,plogContent])
-        cursor.execute("insert into footprint(userID,plogTypeID,carboncurrency) values(%s,%s,%s)",[userID,plogTypeID,99])
-        cursor.execute("updata user set carbonCurrency = carbonCurrency + %s where id = %s",[99,userID])
+        cursor.execute("insert into footprint(userID,plogTypeID,carboncurrency) values(%s,%s,%s)",[userID,plogTypeID,coin])
+        cursor.execute("update User set carbonCurrency=carbonCurrency+%s where id=%s",[coin,userID])
         response = JsonResponse({"status_code":JsonResponse.status_code})
         response['Access-Control-Allow-Origin']='*'
         print(response)
