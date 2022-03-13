@@ -9,7 +9,8 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.views import APIView
 from zlh.WXBizDataCrypt import WXBizDataCrypt
-
+import os,requests
+from zlh.OCR import img2text,extract_bike_traffic,extract_cloth_recycle,extract_no_tableware,extract_public_transport
 
 
 
@@ -78,19 +79,52 @@ class ExchangeGoodAPIView(APIView):
 class PostPlogAPIView(APIView):
     def  post(self,request):
         data = request.data
-
+        #image = request.FILES.get('img')
+        file = request.FILES.get('file')
+        image_name = data['userID']
+        file_dir = os.path.join(os.getcwd(), 'upload_images')
+        file_path = os.path.join(file_dir, image_name)
+        resp = img2text(file)
+        #print(img) # raw数据存入upload_files文件夹中
+        global result_list
+       
         userID = data['userID']
-        plogTypeID = data['plogTypeID']
+        plogTypeID = int(data['plogTypeID'])
         imagePath = data['imagePath']
         plogName = data['plogName']
         plogContent = data['plogContent']
+        print(plogTypeID)
+        coin = float(0) #本次行为可获得的碳币
+        msg = ""
 
+        # 换算汇率
+        if plogTypeID == 2: #骑行公里数
+            ret = extract_bike_traffic(resp)
+            coin = float(ret) * 10
+            msg = "您本次骑行"+str(ret)+"公里，为您收获了"+str(coin)+"枚碳币，感谢您为低碳生活做出的贡献！"
+        elif plogTypeID == 5: #回收衣物重量
+            ret = extract_cloth_recycle(resp)
+            coin = float(ret) * 10
+            msg = "您本次回收衣物重量平均为"+str(ret)+"千克，为您收获了"+str(coin)+"枚碳币，感谢您为低碳生活做出的贡献！"
+        elif plogTypeID == 3: #不使用一次性筷子
+            ret = extract_no_tableware(resp)
+            if ret == True:
+                coin = 5
+                msg = "您本次外卖选择不使用一次性餐具，为您收获了"+str(coin)+"枚碳币，感谢您为低碳生活做出的贡献！"
+            else:
+                msg = "您本次外卖并未选择不使用一次性餐具，无法获得谈不。希望您下次一定能为低碳生活做出的贡献！"
+                coin = 0
+        elif plogTypeID == 4: #乘坐公共交通
+            ret = extract_public_transport(resp)
+            coin = float(ret) * 5
+            msg = "您本次选择乘坐公共交通，花费了"+str(ret)+"元，为您收获了"+str(coin)+"枚碳币，感谢您为低碳生活做出的贡献！"
+
+        # print(ret,'\n\n\n\n\n\n',coin,)
         cursor = connection.cursor()
-        coin = float(99)
         cursor.execute("insert into Plog(userID,plogTypeID,imagePath,plogName,plogContent) values(%s,%s,%s,%s,%s)",[userID,plogTypeID,imagePath,plogName,plogContent])
         cursor.execute("insert into footprint(userID,plogTypeID,carboncurrency) values(%s,%s,%s)",[userID,plogTypeID,coin])
         cursor.execute("update User set carbonCurrency=carbonCurrency+%s where id=%s",[coin,userID])
-        response = JsonResponse({"status_code":JsonResponse.status_code})
+        response = JsonResponse({"status_code":JsonResponse.status_code,"message":msg})
         response['Access-Control-Allow-Origin']='*'
         print(response)
         return response

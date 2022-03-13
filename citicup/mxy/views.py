@@ -140,6 +140,8 @@ class PlogTypeAPIView(APIView):
         for plogtype in results:
             plogtype_item={}
             plogtype_item["id"]=plogtype[0]
+            if plogtype[0] == 1:
+                continue
             plogtype_item["typeName"]=plogtype[1]
             plogtype_item["typeCarbonCurrency"]=plogtype[2]
             plogtype_list.append(plogtype_item)
@@ -194,13 +196,13 @@ class GetPlogDetailsAPIView(APIView):
         comment_list=[]      
         for commentContent in comment:
             comment_item={}
-            comment_item["id"]=commentContent[0]
-            comment_item["plogID"]=commentContent[1]
+            #comment_item["id"]=commentContent[0]
+            #comment_item["plogID"]=commentContent[1]
             comment_item["userID"]=commentContent[2]
             comment_item["creatTime"]=commentContent[3]
             comment_item["commentContent"]=commentContent[4]
             comment_list.append(comment_item)
-        detail_list=[]
+        #detail_list=[]
         detail_item={}
         detail_item["id"]= plogDetail[0]
         detail_item["userID"]= plogDetail[1]
@@ -210,12 +212,12 @@ class GetPlogDetailsAPIView(APIView):
         detail_item["plogName"]=plogDetail[5]
         detail_item["plogContent"]=plogDetail[6]
         detail_item["plogComment"]=comment_list
-        detail_item["likesNum"]=likesNum
-        detail_list.append(detail_item)
+        detail_item["likesNum"]=likesNum[0]
+        #detail_list.append(detail_item)
         cursor.close()
         res = JsonResponse.status_code
         if res==200:
-            response = JsonResponse(detail_list,safe=False)
+            response = JsonResponse(detail_item,safe=False)
             return response
         else:
             return JsonResponse({"status_code":res}) 

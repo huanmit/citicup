@@ -13,7 +13,7 @@ from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentClo
 from tencentcloud.ocr.v20181119 import ocr_client, models
 
 
-def img2text(file_path):
+def img2text(f):#ile_path):
     try:
         cred = credential.Credential("AKIDXtymLdf6HCqDI7fwwf7ICqDJ8gyzjCNH", "e18yNYS7XgZBWaMs74k8GWZNwGK8g5D4")
         httpProfile = HttpProfile()
@@ -24,6 +24,7 @@ def img2text(file_path):
         client = ocr_client.OcrClient(cred, "ap-beijing", clientProfile)
 
         req = models.GeneralBasicOCRRequest()
+        '''
         with open(file_path, "rb") as f:
             base64_data = base64.b64encode(f.read())
             s = base64_data.decode()
@@ -34,8 +35,6 @@ def img2text(file_path):
         s = base64_data.decode()
         # ImageBase64_value = 'data:image/jpeg;base64,%s' % s
         params = {"ImageBase64": s}
-        '''
-
         req.from_json_string(json.dumps(params))
         resp = client.GeneralBasicOCR(req)
         return resp.to_json_string()
@@ -172,9 +171,9 @@ if __name__ == '__main__':
     print(ret)
     ret = extract_text('./test_img/cloth1.jpg', 'cloth')
     print(ret)
-    ret = extract_text('./test_img/traffic2.jpg', 'pub_trans')
+    ret = extract_text('./test_img/traffic1.jpg', 'pub_trans')
     print(ret)
-    ret = extract_text('./test_img/bike3.jpg', 'bike')
+    ret = extract_text('./test_img/bike1.jpg', 'bike')
     print(ret)
     ret = extract_text('./test_img/bike1.jpg', 'abcsasda')
     print(ret)
