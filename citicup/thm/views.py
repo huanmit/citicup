@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.views import APIView
-from thm.achievements import walker,master_walker
+from thm.achievements import walker,master_walker,rider,master_rider,cutleryGuardian,traveler,master_traveler,chop_collector,clothes,clothes_lover
 
 class RegisterAPIView(APIView):
     def post(self,request):
@@ -112,9 +112,21 @@ class Achievements(APIView):
         user_id = data['user_id']
 
         # thm的两类成就,函数记得要import
-        num_walker = walker(user_id) # 步行者
-        num_master_walker = master_walker(user_id) # 步行达人
+        num_walker = walker(user_id) # 1.步行者
+        num_master_walker = master_walker(user_id) # 6.步行达人
+        # lj's
+        num_rider = rider(user_id) # 2.骑行者，金银铜
+        num_master_rider = master_rider(user_id) # 7.骑行达人，金银铜
+        # mxy's
+        num_cg = cutleryGuardian(user_id) # 3.餐具卫士，金银铜
+        num_traveler = traveler(user_id) # 4.未来旅客，金银铜
+        num_master_traveler = master_traveler(user_id) # 9.步未来旅行家，金银铜
+        # zlh's
+        num_chop = chop_collector(user_id) ##### 8.餐具收藏家 #####
+        num_clothes = clothes(user_id) ##### 5.爱心使者 #####
+        num_master_clothes = clothes_lover(user_id) ##### 10.爱心大使 #####
 
 
-        return JsonResponse([num_walker,num_master_walker],safe=False)
+
+        return JsonResponse([num_walker,num_rider,num_cg,num_traveler,num_clothes,num_master_walker,num_master_rider,num_chop,num_master_traveler,num_master_clothes],safe=False)
         #return JsonResponse([0,0,0,0,0,0,0,0,0,0],safe = False)
