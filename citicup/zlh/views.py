@@ -87,7 +87,8 @@ class PostPlogAPIView(APIView):
 
         cursor = connection.cursor()
         cursor.execute("insert into Plog(userID,plogTypeID,imagePath,plogName,plogContent) values(%s,%s,%s,%s,%s)",[userID,plogTypeID,imagePath,plogName,plogContent])
-        
+        cursor.execute("insert into footprint(userID,plogTypeID,carboncurrency) values(%s,%s,%s)",[userID,plogTypeID,99])
+ 
         response = JsonResponse({"status_code":JsonResponse.status_code})
         response['Access-Control-Allow-Origin']='*'
         print(response)
