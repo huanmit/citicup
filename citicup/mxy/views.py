@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.views import APIView
+from mxy.achievements import cutleryGuardian,traveler,master_traveler
 
 #用户登录
 class LoginAPIView(APIView):
@@ -218,3 +219,17 @@ class GetPlogDetailsAPIView(APIView):
             return response
         else:
             return JsonResponse({"status_code":res}) 
+#成就
+class AchievementsM(APIView):
+    def get(self,request):
+        data = request.query_params
+        user_id = data['user_id']
+
+        # mxy的成就,函数记得要import
+        num_cutleryGuardian = cutleryGuardian(user_id) # 餐具卫士
+        num_traveler = traveler(user_id) # 未来旅客
+        num_master_traveler = master_traveler(user_id) # 未来旅行家
+
+
+        return JsonResponse([num_cutleryGuardian,num_traveler,num_master_traveler],safe=False)
+        #return JsonResponse([0,0,0,0,0,0,0,0,0,0],safe = False)
