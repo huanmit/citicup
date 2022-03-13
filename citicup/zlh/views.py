@@ -104,6 +104,7 @@ class CommentMessageAPIView(APIView):
         cursor.execute("select id from Plog where userID=%s",[userID])
         results = cursor.fetchall() #该用户发布过的所有plog的id
         print("results:",results)
+        print(len(results))
 
         if len(results) == 0 : #该用户未发布过plog
             response = JsonResponse({"status_code":500,"error_type":"您暂时没有消息噢！"})
@@ -112,7 +113,8 @@ class CommentMessageAPIView(APIView):
         if len(results) > 0 :
             cursor.execute("select * from Comment where plogID in %s",[results])
             commentInfo = cursor.fetchall()
-            
+            print(commentInfo)
+            print("info")
             comment_list = []
             for c in commentInfo:
                 comment_item = {}
@@ -121,6 +123,9 @@ class CommentMessageAPIView(APIView):
                 comment_item["userID"] = c[2]
                 comment_item["createTime"] = c[3]
                 comment_item["commentContent"] = c[4]
+                cursor.execute("select plogname from plog where id=%s",[c[1]])
+                title = cursor.fetchall()[0][0]
+                comment_item["plogTitle"] = title
                 comment_list.append(comment_item)
      
         res = JsonResponse.status_code
@@ -151,13 +156,15 @@ class LikeMessageAPIView(APIView):
         if len(results) > 0 :
             cursor.execute("select * from Likes where plogID in %s",[results])
             likeInfo = cursor.fetchall()
-            
             like_list = []
             for l in likeInfo:
                 like_item = {}
                 like_item["userID"] = l[0]
                 like_item["likeTime"] = l[1]
                 like_item["plogID"] = l[2]
+                cursor.execute("select plogname from plog where id=%s",[l[2]])
+                title = cursor.fetchall()[0][0]
+                like_item["plogTitle"] = title
                 like_list.append(like_item)
             
         res = JsonResponse.status_code
@@ -197,6 +204,9 @@ class ReportMessageAPIView(APIView):
                 report_item["plogID"] = r[2]
                 report_item["reportTime"] = r[3]
                 report_item["reportContent"] = r[4]
+                cursor.execute("select plogname from plog where id=%s",[r[2]])
+                title = cursor.fetchall()[0][0]
+                report_item["plogTitle"] = title
                 report_list.append(report_item)
       
         res = JsonResponse.status_code
