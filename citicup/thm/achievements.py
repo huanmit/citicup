@@ -103,3 +103,54 @@ def gold_master_walker(user_id:str):
     if sum >= 10000000:
         return True
     return False
+
+# 骑行者，金银铜
+def rider(user_id:str):
+    res = 0
+    res = bronze_rider(user_id) + silver_or_gold_rider(user_id)
+    return res
+
+# 骑行达人，金银铜
+def master_rider(user_id:str):
+    cursor = connection.cursor()
+    cursor.execute("select carbonCurrency from footprint where plogtypeid=2 and userid=%s",[user_id])
+    results = cursor.fetchall()
+    sum = 0
+    for each in results:
+        sum += each[0]
+    if sum >= 1000000:
+        return 3
+    else:
+        if sum >= 500000:
+            return 2
+        else:
+            if sum >= 100000:  
+                return 1 
+    return 0    
+
+# 单次骑行3km,后期注意换算的问题
+def bronze_rider(user_id:str):
+    cursor = connection.cursor()
+    cursor.execute("select carbonCurrency from footprint where plogtypeid=2 and userid=%s",[user_id])
+    results = cursor.fetchall()
+
+    for each in results:
+        if each[0] >= 3000: # 建模后要更改
+            return 1
+    return 0   
+
+# 累计上传骑行数据10天或者30天以上
+def silver_or_gold_rider(user_id:str):
+    cursor = connection.cursor()
+    cursor.execute("select carbonCurrency from footprint where plogtypeid=2 and userid=%s",[user_id])
+    results = cursor.fetchall()
+    cnt = 0
+    for each in results:
+        if each[0] >= 3000:
+            cnt += 1
+    if cnt >= 30:
+        return 2
+    else:
+        if cnt >= 10:
+            return 1     
+    return 0      
