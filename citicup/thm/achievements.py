@@ -9,7 +9,7 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.views import APIView
 
-
+# 步行者，金银铜
 def walker(user_id:str):
     res = 0
     if bronze_walker(user_id) == True:
@@ -20,20 +20,15 @@ def walker(user_id:str):
         res += 1
     return res
 
-def rider(user_id:str):
+# 步行达人，金银铜
+def master_walker(user_id:str):
     res = 0
-    return res
-
-def chop(user_id:str):
-    res = 0
-    return res
-
-def public(user_id:str):
-    res = 0
-    return res
-
-def clothes(user_id:str):
-    res = 0
+    if bronze_master_walker(user_id) == True:
+        res += 1
+    if silver_master_walker(user_id) == True:
+        res += 1
+    if gold_master_walker(user_id) == True:
+        res += 1
     return res
 
 # 单次步行2w步,后期注意换算的问题
@@ -52,8 +47,11 @@ def silver_walker(user_id:str):
     cursor = connection.cursor()
     cursor.execute("select carbonCurrency from footprint where plogtypeid=1 and userid=%s",[user_id])
     results = cursor.fetchall()
-    
-    if len(results) >= 10:
+    cnt = 0
+    for each in results:
+        if each[0] >= 10000:
+            cnt += 1
+    if cnt >= 10:
         return True
     return False
 
@@ -62,8 +60,46 @@ def gold_walker(user_id:str):
     cursor = connection.cursor()
     cursor.execute("select carbonCurrency from footprint where plogtypeid=1 and userid=%s",[user_id])
     results = cursor.fetchall()
-    
-    if len(results) >= 30:
+    cnt = 0
+    for each in results:
+        if each[0] >= 10000:
+            cnt += 1
+    if cnt >= 30:
         return True
     return False
 
+# 100w步
+def bronze_master_walker(user_id:str):
+    cursor = connection.cursor()
+    cursor.execute("select carbonCurrency from footprint where plogtypeid=1 and userid=%s",[user_id])
+    results = cursor.fetchall()
+    sum = 0
+    for each in results:
+        sum += each[0]
+    if sum >= 1000000:
+        return True
+    return False
+
+# 500w步
+def silver_master_walker(user_id:str):
+    cursor = connection.cursor()
+    cursor.execute("select carbonCurrency from footprint where plogtypeid=1 and userid=%s",[user_id])
+    results = cursor.fetchall()
+    sum = 0
+    for each in results:
+        sum += each[0]
+    if sum >= 5000000:
+        return True
+    return False
+
+# 1000w步
+def gold_master_walker(user_id:str):
+    cursor = connection.cursor()
+    cursor.execute("select carbonCurrency from footprint where plogtypeid=1 and userid=%s",[user_id])
+    results = cursor.fetchall()
+    sum = 0
+    for each in results:
+        sum += each[0]
+    if sum >= 10000000:
+        return True
+    return False

@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.views import APIView
-from thm.achievements import walker
+from thm.achievements import walker,master_walker
 
 class RegisterAPIView(APIView):
     def post(self,request):
@@ -110,8 +110,11 @@ class Achievements(APIView):
     def get(self,request):
         data = request.query_params
         user_id = data['user_id']
-        bronze_wa = walker(user_id) # 步行者
-        # walk
 
-        #return JsonResponse([walk,2,3],safe=False)
-        return JsonResponse([0,0,0,0,0,0,0,0,0,0],safe = False)
+        # thm的两类成就,函数记得要import
+        num_walker = walker(user_id) # 步行者
+        num_master_walker = master_walker(user_id) # 步行达人
+
+
+        return JsonResponse([num_walker,num_master_walker],safe=False)
+        #return JsonResponse([0,0,0,0,0,0,0,0,0,0],safe = False)
