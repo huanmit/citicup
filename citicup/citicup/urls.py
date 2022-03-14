@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from thm.views import RegisterAPIView, SearchFootprintAPIView, SearchExchangeAPIView, LikeAPIView, Achievements
+from thm.views import RegisterAPIView, SearchFootprintAPIView, SearchExchangeAPIView, LikeAPIView, Achievements, WebPlogType, WebGoodType, WebLogin, WebGood, Report
 from zlh.views import UploadStepsAPIView,PostPlogAPIView,ExchangeGoodAPIView,CommentMessageAPIView,LikeMessageAPIView,ReportMessageAPIView
 from mxy.views import LoginAPIView,GetAllGoodsAPIView,GoodTypeAPIView,CategorizedGoodAPIView,GetAllPlogAPIView,PlogTypeAPIView,CategorizedPlogAPIView,GetPlogDetailsAPIView
 from lj.views import GoodAPIView,UserPageAPIView,ReportAPIView,CommentAPIView,UserPlogAPIView
@@ -36,7 +36,11 @@ urlpatterns = [
     path('search_exchanges/',SearchExchangeAPIView.as_view()), #查询某天兑换记录 
     path('like/',LikeAPIView.as_view()), #点赞plog   
     path('achievements/', Achievements.as_view()), #查看成就，已完成步行者（金银铜）
-
+    path('web/plog_type/', WebPlogType.as_view()), #web端管理plogtype
+    path('web/good_type/', WebGoodType.as_view()), #web端管理goodtype
+    path('web/login/', WebLogin.as_view()), #web端的管理员账户登录、注册
+    path('web/good/', WebGood.as_view()), #web端管理商品
+    path('web/reports/', Report.as_view()), #处理举报消息
     # zlh's part,记得打逗号！
     path('wxsteps_upload/',UploadStepsAPIView.as_view()),  #微信步数兑换
     path('good_exchange/',ExchangeGoodAPIView.as_view()),  #商品兑换

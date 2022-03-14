@@ -129,4 +129,184 @@ class Achievements(APIView):
 
 
         return JsonResponse([num_walker,num_rider,num_cg,num_traveler,num_clothes,num_master_walker,num_master_rider,num_chop,num_master_traveler,num_master_clothes],safe=False)
-        #return JsonResponse([0,0,0,0,0,0,0,0,0,0],safe = False)
+
+class WebPlogType(APIView):
+    def post(self,request):
+        data = request.data
+        type_name = data['type_name']
+        type_coin = data['type_coin']
+        cursor = connection.cursor()
+        cursor.execute("insert into plogtype (typename,typecarboncurrency) values(%s,%s)",[type_name,type_coin])
+        
+        res = JsonResponse.status_code
+        response = JsonResponse({"status_code":res})
+        return response 
+    
+    def put(self,request):
+        data = request.data
+        type_name = data['type_name']
+        type_coin = data['type_coin'] 
+        id = data['id']
+        cursor = connection.cursor()
+ 
+        if type_name != "":
+            cursor.execute("update plogtype set typename=%s where id=%s",[type_name,id])
+        if type_coin != "":
+            cursor.execute("update plogtype set typeCarbonCurrency=%s where id=%s",[type_coin,id])
+        
+        res = JsonResponse.status_code
+        response = JsonResponse({"status_code":res})
+        return response 
+    
+    def delete(self,request):
+        data = request.data
+        id = data['id']
+        cursor = connection.cursor()
+        cursor.execute("delete from plogtype where id=%s",[id])
+
+        res = JsonResponse.status_code
+        response = JsonResponse({"status_code":res})
+        return response 
+
+class WebGoodType(APIView):
+    def post(self,request):
+        data = request.data
+        type_name = data['type_name']
+        cursor = connection.cursor()
+        cursor.execute("insert into goodtype (goodtypename) values(%s)",[type_name])
+        
+        res = JsonResponse.status_code
+        response = JsonResponse({"status_code":res})
+        return response 
+    
+    def put(self,request):
+        data = request.data
+        type_name = data['type_name']
+        id = data['id']
+        cursor = connection.cursor()
+ 
+        if type_name != "":
+            cursor.execute("update goodtype set goodtypename=%s where id=%s",[type_name,id])
+        
+        res = JsonResponse.status_code
+        response = JsonResponse({"status_code":res})
+        return response 
+    
+    def delete(self,request):
+        data = request.data
+        id = data['id']
+        cursor = connection.cursor()
+        cursor.execute("delete from goodtype where id=%s",[id])
+
+        res = JsonResponse.status_code
+        response = JsonResponse({"status_code":res})
+        return response 
+
+class WebLogin(APIView):
+    def post(self,request):
+        data = request.data
+        id = data['id']
+        userName = data['user_name']
+        password = data['password']
+
+        cursor = connection.cursor()
+        cursor.execute("insert into adminuser(id,adminuserName,password) values(%s,%s,%s)",[id,userName,password])
+
+        response = JsonResponse(data)
+        res = JsonResponse.status_code
+        response = JsonResponse({"status_code":res})
+        return response
+
+    def get(self,request):
+        data = request.query_params
+        print(data)
+        id = data['id']
+        password = data['password']
+        cursor = connection.cursor()
+        cursor.execute("select id,password from adminuser where id=%s and password=%s",[id,password])
+        results = cursor.rowcount
+        if results==1:
+            return JsonResponse({"ifSuccess":True})  
+        else:
+            return JsonResponse({"ifSuccess":False}) 
+
+class WebGood(APIView):
+    def post(self,request):
+        data = request.data
+        good_name = data['good_name']
+        good_type = data['good_type']
+        good_description = data['good_description']
+        good_carboncurrency = data['good_carboncurrency']
+        good_left = data['good_left']
+        image_path = data['image_path']
+
+        cursor = connection.cursor()
+        cursor.execute("insert into good (goodname,goodtype,gooddescription,goodcarboncurrency,goodleft,imagepath) values(%s,%s,%s,%s,%s,%s)",[good_name,good_type,good_description,good_carboncurrency,good_left,image_path])
+
+        res = JsonResponse.status_code
+        response = JsonResponse({"status_code":res})
+        return response  
+
+    def put(self,request):
+        data = request.data
+        good_name = data['good_name']
+        good_type = data['good_type']
+        good_description = data['good_description']
+        good_carboncurrency = data['good_carboncurrency']
+        good_left = data['good_left']
+        image_path = data['image_path']
+        id = data['id']
+        
+        cursor = connection.cursor()
+        cursor.execute("update good set goodname=%s,goodtype=%s,gooddescription=%s,goodcarboncurrency=%s,goodleft=%s,imagepath=%s where id=%s",[good_name,good_type,good_description,good_carboncurrency,good_left,image_path,id])
+
+        res = JsonResponse.status_code
+        response = JsonResponse({"status_code":res})
+        return response  
+
+
+    def delete(self,request):
+        data = request.data
+        id = data['id']
+
+        cursor = connection.cursor()
+        cursor.execute("delete from good where id=%s",[id])
+
+        res = JsonResponse.status_code
+        response = JsonResponse({"status_code":res})
+        return response  
+
+class Report(APIView):
+    def post(self,request):
+        data = request.data
+        report_id = data['report_id']
+        admin_user = data['admin_user']
+        result = data['result']
+        result_detail = data['result_detail']
+
+        cursor = connection.cursor()
+        cursor.execute("insert into reportprocess (reportid,adminuser,result,resultdetail) values(%s,%s,%s,%s)",[report_id,admin_user,result,result_detail])
+        
+        if int(result) == 1:
+            cursor.execute("select plogid from reports where id=%s",[report_id])
+            results = cursor.fetchall()
+            plog_id = results[0][0] #int
+            cursor.execute("select userid,plogname from plog where id=%s",[plog_id])
+            results = cursor.fetchall()
+            user_id = results[0][0] #string
+            plog_name = results[0][1]
+
+            cursor.execute("update plog set plogname=%s,plogcontent=%s,imagepath=%s where id=%s",["这条帖子不见了噢","这条帖子不见了噢","",plog_id])
+            cursor.execute("update user set carboncurrency=carboncurrency-100 where id=%s",[user_id])
+            cursor.execute("insert into footprint (userid,plogtypeid,carboncurrency) values(%s,10,%s)",[user_id,-100])
+
+        res = JsonResponse.status_code
+        response = JsonResponse({"status_code":res})
+        return response 
+
+
+
+        res = JsonResponse.status_code
+        response = JsonResponse({"status_code":res})
+        return response  
+ 

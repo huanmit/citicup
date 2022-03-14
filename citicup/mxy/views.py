@@ -140,7 +140,7 @@ class PlogTypeAPIView(APIView):
         for plogtype in results:
             plogtype_item={}
             plogtype_item["id"]=plogtype[0]
-            if plogtype[0] == 1:
+            if plogtype[0] == 1 or plogtype[0] == 10:
                 continue
             plogtype_item["typeName"]=plogtype[1]
             plogtype_item["typeCarbonCurrency"]=plogtype[2]
