@@ -9,6 +9,7 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.views import APIView
 from thm.achievements import walker,master_walker,rider,master_rider,cutleryGuardian,traveler,master_traveler,chop_collector,clothes,clothes_lover
+import thm.GarbageClassification as GC
 
 class RegisterAPIView(APIView):
     def post(self,request):
@@ -305,7 +306,6 @@ class ProcessReport(APIView):
         response = JsonResponse({"status_code":res})
         return response 
 
-
 class WebGetReport(APIView):
     def get(self,request):
         cursor = connection.cursor()
@@ -331,3 +331,17 @@ class WebGetReport(APIView):
         res = JsonResponse.status_code
         response = JsonResponse(list, safe = False)
         return response 
+
+# 垃圾分类
+# 发布Plog
+class Garbage(APIView):
+    def post(self,request):
+        data = request.data
+        file = request.FILES.get('file')
+        file_dir = os.path.join(os.getcwd(), 'upload_images')
+        file_path = os.path.join(file_dir, image_name)
+
+        pred = GC.predict_img(file)
+        print(pred)
+        #print(img) # raw数据存入upload_files文件夹中
+        return JsonResponse({'result':pred})
