@@ -29,14 +29,8 @@ def img2text(file_path):
             s = base64_data.decode()
             # ImageBase64_value = 'data:image/jpeg;base64,%s' % s
             params = {"ImageBase64": s}
-        '''
-        base64_data = base64.b64encode(f.read())
-        s = base64_data.decode()
-        # ImageBase64_value = 'data:image/jpeg;base64,%s' % s
-        params = {"ImageBase64": s}
-        '''
-
         req.from_json_string(json.dumps(params))
+
         resp = client.GeneralBasicOCR(req)
         return resp.to_json_string()
 
@@ -98,18 +92,7 @@ def extract_cloth_recycle(json_string):
                 weight = text.replace(word, "")
                 # print(text.replace(word, ""))
                 break
-        start = 0
-    for each in weight:
-        a=ord(each)
-        if a in range(48,58):
-            start = weight.find(each)
-            break
-    weight = weight[start:]
-    index = weight.find('-')
-    num1 = float(weight[0:index])
-    num2 = float(weight[index+1:])
-    avg_weight = (num1 + num2) / 2
-    return avg_weight
+    return weight
 
 
 def extract_public_transport(json_string):
@@ -172,9 +155,9 @@ if __name__ == '__main__':
     print(ret)
     ret = extract_text('./test_img/cloth1.jpg', 'cloth')
     print(ret)
-    ret = extract_text('./test_img/traffic2.jpg', 'pub_trans')
+    ret = extract_text('./test_img/traffic1.jpg', 'pub_trans')
     print(ret)
-    ret = extract_text('./test_img/bike3.jpg', 'bike')
+    ret = extract_text('./test_img/bike1.jpg', 'bike')
     print(ret)
     ret = extract_text('./test_img/bike1.jpg', 'abcsasda')
     print(ret)
