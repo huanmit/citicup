@@ -5,8 +5,8 @@ import torch.nn.functional as F
 import torchvision.transforms as transforms
 from efficientnet_pytorch import EfficientNet
 
-classes = ['metal', 'glass', 'paper', 'non-recyclable', 'cardboard', 'plastic']
-cn_classes = ['金属','玻璃','可回收纸','不可回收垃圾','纸板','塑料']
+classes = ['cardboard', 'glass', 'metal', 'paper', 'plastic', 'non-recyclable']
+cn_classes = ['纸板','玻璃','金属','可回收纸','塑料','不可回收垃圾']
 
 class EffNet(nn.Module):
     def __init__(self):
