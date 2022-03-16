@@ -11,7 +11,3 @@ pip install xxx
 ```
 
 where xxx is the corresponding package name.
-
-
-
-Call predict_img(inmage_path) function to predict the label, as test.py shown.
