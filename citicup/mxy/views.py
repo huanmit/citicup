@@ -186,9 +186,13 @@ class GetPlogDetailsAPIView(APIView):
     def get(self,request):
         data = request.query_params
         plogID=data['plogID']
+        viewer = data['userID']
+
         cursor = connection.cursor()
         cursor.execute("select count(plogID) from likes where plogID=%s",[plogID])
         likesNum=cursor.fetchone()
+        cursor.execute("select count(*) from likes where plogID=%s and userID=%s",[plogID,viewer])
+        ifLiked=cursor.fetchone()
         cursor.execute("select id,userID,plogTypeID,imagePath,creatTime,plogName,plogContent from plog where id=%s",[plogID])
         plogDetail=cursor.fetchone()
         cursor.execute("select id,plogID,userID,creatTime,commentContent from comment where plogId=%s",[plogID])
@@ -213,6 +217,7 @@ class GetPlogDetailsAPIView(APIView):
         detail_item["plogContent"]=plogDetail[6]
         detail_item["plogComment"]=comment_list
         detail_item["likesNum"]=likesNum[0]
+        detail_item["ifLiked"]=ifLiked[0]
         #detail_list.append(detail_item)
         cursor.close()
         res = JsonResponse.status_code

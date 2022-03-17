@@ -50,16 +50,14 @@ class ExchangeGoodAPIView(APIView):
         goodID = data['goodID']
         goodCarbonCurrency = data['goodCarbonCurrency']
 
-        cursor = connection.cursor()
-        cursor.execute("insert into Exchanges (userID, goodID) values (%s,%s)",[userID,goodID])
-       
+        cursor = connection.cursor()       
         cursor.execute("select carbonCurrency from User where id=%s",[userID])
         result = cursor.fetchall()
         result = result[0][0]
-        print(result)
         # 碳币充足时
         if result >= goodCarbonCurrency:
             cursor.execute("update User set carbonCurrency=carbonCurrency-%s where id=%s",[goodCarbonCurrency,userID])
+            cursor.execute("insert into Exchanges (userID, goodID) values (%s,%s)",[userID,goodID])
             response = JsonResponse({"status_code":JsonResponse.status_code})
             response['Access-Control-Allow-Origin']='*'
             print(response)
