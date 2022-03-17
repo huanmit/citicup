@@ -133,6 +133,24 @@ class Achievements(APIView):
         return JsonResponse([num_walker,num_rider,num_cg,num_traveler,num_clothes,num_master_walker,num_master_rider,num_chop,num_master_traveler,num_master_clothes],safe=False)
 
 class WebPlogType(APIView):
+    def get(self, request):
+        data = request.query_params
+        id = data.get('id', None)
+        cursor = connection.cursor()
+        sql = "select id,typeName,typeCarbonCurrency from plogType where id =%s"
+        cursor.execute(sql, [id])
+        connection.commit()
+        results = cursor.fetchall()
+        try:
+            result = results[0]
+        except:
+            return JsonResponse({"status_code":JsonResponse.status_code})
+
+        response = []
+        response.append({'id': result[0], 'typeName': result[1],'typeCarbonCurrency':result[2]})
+        cursor.close()
+        return JsonResponse(response, safe=False)
+
     def post(self,request):
         data = request.data
         type_name = data['type_name']
@@ -161,8 +179,8 @@ class WebPlogType(APIView):
         return response 
     
     def delete(self,request):
-        data = request.data
-        id = data['id']
+        data = request.query_params
+        id = data.get('id')
         cursor = connection.cursor()
         cursor.execute("delete from plogtype where id=%s",[id])
 
@@ -171,6 +189,24 @@ class WebPlogType(APIView):
         return response 
 
 class WebGoodType(APIView):
+    def get(self, request):
+        data = request.query_params
+        id = data.get('id', None)
+        cursor = connection.cursor()
+        sql = "select id,typeName from goodtype where id =%s"
+        cursor.execute(sql, [id])
+        connection.commit()
+        results = cursor.fetchall()
+        try:
+            result = results[0]
+        except:
+            return JsonResponse({"status_code":JsonResponse.status_code})
+
+        response = []
+        response.append({'id': result[0], 'typeName': result[1]})
+        cursor.close()
+        return JsonResponse(response, safe=False)
+
     def post(self,request):
         data = request.data
         type_name = data['type_name']
@@ -195,8 +231,8 @@ class WebGoodType(APIView):
         return response 
     
     def delete(self,request):
-        data = request.data
-        id = data['id']
+        data = request.query_params
+        id = data.get('id')
         cursor = connection.cursor()
         cursor.execute("delete from goodtype where id=%s",[id])
 
@@ -204,7 +240,7 @@ class WebGoodType(APIView):
         response = JsonResponse({"status_code":res})
         return response 
 
-class WebLogin(APIView):
+class WebRegister(APIView):
     def post(self,request):
         data = request.data
         id = data['id']
@@ -219,8 +255,9 @@ class WebLogin(APIView):
         response = JsonResponse({"status_code":res})
         return response
 
-    def get(self,request):
-        data = request.query_params
+class WebLogin(APIView):
+    def post(self,request):
+        data = request.data
         print(data)
         id = data['id']
         password = data['password']
@@ -235,7 +272,9 @@ class WebLogin(APIView):
 class WebGood(APIView):
     def post(self,request):
         data = request.data
-        good_name = data['good_name']
+        print(data)
+        good_name = data["good_name"]
+        print(good_name)
         good_type = data['good_type']
         good_description = data['good_description']
         good_carboncurrency = data['good_carboncurrency']
@@ -268,8 +307,8 @@ class WebGood(APIView):
 
 
     def delete(self,request):
-        data = request.data
-        id = data['id']
+        data = request.query_params
+        id = data.get('id')
 
         cursor = connection.cursor()
         cursor.execute("delete from good where id=%s",[id])

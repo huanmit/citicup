@@ -15,7 +15,7 @@ class GoodAPIView(APIView):
         data = request.query_params
         id = data.get('id', None)
         cursor = connection.cursor()
-        sql = "select good.id,goodName,goodTypeName,goodDescription,goodCarbonCurrency,goodLeft,imagePath from good,goodtype where good.id =%s and good.goodType=goodtype.id"
+        sql = "select id,goodName,goodType,goodDescription,goodCarbonCurrency,goodLeft,imagePath from good where good.id =%s"
         cursor.execute(sql, [id])
         connection.commit()
         results = cursor.fetchall()
