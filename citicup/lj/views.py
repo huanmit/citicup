@@ -15,7 +15,7 @@ class GoodAPIView(APIView):
         data = request.query_params
         id = data.get('id', None)
         cursor = connection.cursor()
-        sql = "select id,goodName,goodType,goodDescription,goodCarbonCurrency,goodLeft,imagePath from good where good.id =%s"
+        sql = "select good.id,goodName,goodTypeName,goodDescription,goodCarbonCurrency,goodLeft,imagePath,goodType from good,goodtype where good.id =%s and good.goodType=goodtype.id"
         cursor.execute(sql, [id])
         connection.commit()
         results = cursor.fetchall()
@@ -27,7 +27,7 @@ class GoodAPIView(APIView):
         response = []
         response.append({'id': result[0], 'goodName': result[1],'goodType': result[2],
                          'goodDescription': result[3], 'goodCarbonCurrency': result[4],
-                         'goodLeft': result[5], 'imagePath': result[6]})
+                         'goodLeft': result[5], 'imagePath': result[6],'goodTypeId':result[7]})
         cursor.close()
         return JsonResponse(response, safe=False)
 
