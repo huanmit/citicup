@@ -9,7 +9,7 @@ from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.views import APIView
 from zlh.WXBizDataCrypt import WXBizDataCrypt
-import os,requests
+import os,requests,datetime
 from zlh.OCR import img2text,extract_bike_traffic,extract_cloth_recycle,extract_no_tableware,extract_public_transport
 
 
@@ -33,6 +33,15 @@ class UploadStepsAPIView(APIView):
         userID = data['userID']
         plogTypeID = data['plogTypeID']
         cursor = connection.cursor()
+
+        today = str(datetime.date.today())
+        cursor.execute("select count(*) from footprint where userid=%s and plogtypeid=1 and foottime>=%s and foottime<=%s",[userID,today+" 00:00:00",today+" 23:59:59"])
+        dates = cursor.fetchone()[0]
+        if dates == 1:
+            print("catch!!!!")
+            response = JsonResponse({"status_code":500,"err_msg":"您今日步数已上传，请明天再来！"})
+            return response
+
         cursor.execute("insert into Footprint(userID,carbonCurrency,plogTypeID) values(%s,%s,%s)",[userID,wxSteps,plogTypeID])
         cursor.execute("update User set carbonCurrency=carbonCurrency+%s where id=%s",[wxSteps,userID])
 
