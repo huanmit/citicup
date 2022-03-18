@@ -90,27 +90,31 @@ export default {
         .addPlogType(data)
         .then((res) => {
           console.log(res);
-          alert("添加成功");
-          this.addVisible = false;
-          axios.getAllPlogTypes().then((res) => {
-            console.log(res.data);
-            let raw = res.data;
-            let total = [];
-            raw.forEach((item) => {
-              let data = {
-                id: item.id,
-                typename: item.typeName,
-                typecarboncurrency: item.typeCarbonCurrency,
-              };
-              total.push(data);
+          if (res.data.error_tip) {
+            alert("添加失败\n帖子类型对应的汇率应该是数字");
+          } else {
+            alert("添加成功");
+            this.addVisible = false;
+            axios.getAllPlogTypes().then((res) => {
+              console.log(res.data);
+              let raw = res.data;
+              let total = [];
+              raw.forEach((item) => {
+                let data = {
+                  id: item.id,
+                  typename: item.typeName,
+                  typecarboncurrency: item.typeCarbonCurrency,
+                };
+                total.push(data);
+              });
+              this.tableData = total;
+              console.log(this.tableData);
             });
-            this.tableData = total;
-            console.log(this.tableData);
-          });
+          }
         })
         .catch((err) => {
           console.log(err);
-          alert("添加失败");
+          alert("添加失败\n服务器错误");
         });
     },
   },

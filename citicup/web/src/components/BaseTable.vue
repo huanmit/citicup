@@ -29,7 +29,7 @@
               </div>
             </div>
             <div class="col-md-12" style="text-align: center">
-              <base-button type="primary" @click="refuse()">拒绝</base-button>
+              <base-button type="primary" @click="refuse()">确认</base-button>
               <base-button type="default" @click="refuseCancel()"
                 >取消</base-button
               >

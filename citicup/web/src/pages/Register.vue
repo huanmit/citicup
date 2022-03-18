@@ -9,6 +9,9 @@
           <div class="main-title">注册</div>
           <div class="main-form">
             <input class="login-input" placeholder="用户id" v-model="id" />
+            <div class="input-check" v-show="userNameErr">
+              {{ this.userNameInfo }}
+            </div>
             <input class="login-input" placeholder="用户名" v-model="name" />
             <input
               class="login-input"
@@ -17,6 +20,7 @@
               v-model="psw"
             />
           </div>
+          <div class="input-check" v-show="pswErr">{{ this.pswInfo }}</div>
           <div class="main-lower">
             <div class="login-btn" @click="Register()">注册</div>
             <div class="go-login" @click="goLogin()">登录</div>
@@ -53,6 +57,10 @@ export default {
   },
   data() {
     return {
+      userNameInfo: "", //用户名错误提示
+      userNameErr: false,
+      pswInfo: "",
+      pswErr: false,
       id: "",
       name: "",
       psw: "",
@@ -77,8 +85,14 @@ export default {
         .userRegister(data)
         .then((res) => {
           console.log(res.data);
-          this.pswInfo = "注册成功";
-          this.$router.push("/login");
+          if (res.data.error_tip) {
+            this.userNameInfo = res.data.error_tip;
+            this.userNameErr = true;
+          } else {
+            this.pswInfo = "注册成功";
+            this.pswErr = true;
+            this.$router.push("/login");
+          }
         })
         .catch((err) => {
           this.pswInfo = "注册失败";

@@ -155,6 +155,9 @@ class WebPlogType(APIView):
         data = request.data
         type_name = data['type_name']
         type_coin = data['type_coin']
+        if type_coin is None:
+                 return JsonResponse({"error_tip":"汇率应为数字"}) 
+
         cursor = connection.cursor()
         cursor.execute("insert into plogtype (typename,typecarboncurrency) values(%s,%s)",[type_name,type_coin])
         
@@ -166,6 +169,9 @@ class WebPlogType(APIView):
         data = request.data
         type_name = data['type_name']
         type_coin = data['type_coin'] 
+        if type_coin is None:
+                 return JsonResponse({"error_tip":"汇率应为数字"}) 
+
         id = data['id']
         cursor = connection.cursor()
  
@@ -248,6 +254,13 @@ class WebRegister(APIView):
         password = data['password']
 
         cursor = connection.cursor()
+
+        
+        cursor.execute("select id from adminuser where id=%s",[id]) 
+        results = cursor.rowcount
+        if results==1:
+            return JsonResponse({"error_tip":"改用户id已被注册"})  
+        
         cursor.execute("insert into adminuser(id,adminuserName,password) values(%s,%s,%s)",[id,userName,password])
 
         response = JsonResponse(data)

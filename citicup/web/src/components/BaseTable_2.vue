@@ -140,10 +140,10 @@ export default {
           console.log(res);
           alert("删除成功");
           location.reload();
-          
         })
         .catch((err) => {
           console.log(err);
+          alert("删除失败\n该商品类型暂时不可被删除");
         });
     },
   },

@@ -124,13 +124,16 @@ export default {
         .editPlogType(data)
         .then((res) => {
           console.log(res);
-          alert("修改成功");
-          this.editVisible = false;
-          location.reload();
+          if (res.data.error_tip) {
+            alert("修改失败\n帖子类型对应的汇率应该是数字");
+          } else {
+            alert("修改成功");
+            this.editVisible = false;
+             location.reload();
+          }
         })
         .catch((err) => {
           console.log(err);
-          
         });
     },
     removeType(id) {
@@ -139,10 +142,11 @@ export default {
         .then((res) => {
           console.log(res);
           alert("删除成功");
-        location.reload();
+          location.reload();
         })
         .catch((err) => {
           console.log(err);
+          alert("删除失败\n该帖子类型暂时不可被删除");
         });
     },
   },
