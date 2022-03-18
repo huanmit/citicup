@@ -10,7 +10,7 @@ from rest_framework import permissions
 from rest_framework.views import APIView
 from thm.achievements import walker,master_walker,rider,master_rider,cutleryGuardian,traveler,master_traveler,chop_collector,clothes,clothes_lover
 import thm.GarbageClassification as GC
-import os
+import hashlib, time
 
 class RegisterAPIView(APIView):
     def post(self,request):
@@ -191,9 +191,9 @@ class WebPlogType(APIView):
 class WebGoodType(APIView):
     def get(self, request):
         data = request.query_params
-        id = data.get('id', None)
+        id = data.get('id')
         cursor = connection.cursor()
-        sql = "select id,typeName from goodtype where id =%s"
+        sql = "select id,goodtypename from goodtype where id =%s"
         cursor.execute(sql, [id])
         connection.commit()
         results = cursor.fetchall()
@@ -255,6 +255,13 @@ class WebRegister(APIView):
         response = JsonResponse({"status_code":res})
         return response
 
+# 给 token 进行加密处理
+def token_md5(user):
+    ctime = str(time.time())  # 当前时间
+    m = hashlib.md5(bytes(user, encoding="utf-8"))
+    m.update(bytes(ctime, encoding="utf-8"))  # 加上时间戳
+    return m.hexdigest()
+
 class WebLogin(APIView):
     def post(self,request):
         data = request.data
@@ -265,7 +272,8 @@ class WebLogin(APIView):
         cursor.execute("select id,password from adminuser where id=%s and password=%s",[id,password])
         results = cursor.rowcount
         if results==1:
-            return JsonResponse({"ifSuccess":True})  
+            token = token_md5(id)
+            return JsonResponse({"ifSuccess":True,"token":token})  
         else:
             return JsonResponse({"ifSuccess":False}) 
 
@@ -328,10 +336,12 @@ class ProcessReport(APIView):
         cursor = connection.cursor()
         cursor.execute("insert into reportprocess (reportid,adminuser,result,resultdetail) values(%s,%s,%s,%s)",[report_id,admin_user,result,result_detail])
         
+        cursor.execute("select plogid from reports where id=%s",[report_id])
+        results = cursor.fetchall()
+        plog_id = results[0][0] #int
+
+        
         if int(result) == 1:
-            cursor.execute("select plogid from reports where id=%s",[report_id])
-            results = cursor.fetchall()
-            plog_id = results[0][0] #int
             cursor.execute("select userid,plogname from plog where id=%s",[plog_id])
             results = cursor.fetchall()
             user_id = results[0][0] #string
