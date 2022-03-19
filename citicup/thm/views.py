@@ -11,6 +11,7 @@ from rest_framework.views import APIView
 from thm.achievements import walker,master_walker,rider,master_rider,cutleryGuardian,traveler,master_traveler,chop_collector,clothes,clothes_lover
 import thm.GarbageClassification as GC
 import hashlib, time
+import thm.credits as cmodel
 
 class RegisterAPIView(APIView):
     def post(self,request):
@@ -408,3 +409,59 @@ class Garbage(APIView):
         print(pred)
         #print(img) # raw数据存入upload_files文件夹中
         return JsonResponse({'result':pred})
+
+class CreditsModel(APIView):
+    def get(self,request):
+        data = request.query_params
+        user_id = data["user_id"]
+
+        cursor = connection.cursor()
+        dict = {"old":[],"new":[]}
+
+        #order by time    desc
+        cursor.execute("select * from carboncredits where userid=%s order by date desc",[user_id])
+        res = cursor.fetchall()
+        if len(res) == 1:
+            dict['old']=["-","0","0%","0%","0%","0%","0%"]
+        else:
+            old = res[1]
+            print(old)
+            dict['old'].append(str(old[1]))
+            dict['old'].append(str(old[2]))
+            for i in range(3,8):
+                s = round(old[i]*100,2)
+                s = str(s)+"%"
+                dict['old'].append(s)
+
+        new = res[0]
+        dict['new'].append(str(new[1]))
+        dict['new'].append(str(new[2]))
+        for i in range(3,8):
+            s = round(new[i]*100,2)
+            s = str(s)+"%"
+            dict['new'].append(s)
+ 
+        print(dict)
+        return JsonResponse(dict)
+
+class CreditHouse(APIView):
+    def get(self,request):
+        data = request.query_params
+        user_id = data["user_id"]
+
+        cursor = connection.cursor()
+        cursor.execute("select carboncredit from user where id=%s",[user_id])
+        cre = cursor.fetchone()[0]
+        if cre >= 90:
+            level = 3
+        elif cre >= 60:
+            level = 2
+        else:
+            level = 1
+
+        return JsonResponse({'level':level}) 
+
+class Calculate(APIView):
+    def get(self,request):
+        cmodel.evaluate()
+        return JsonResponse({'result':"本次碳信用评估已完成"}) 

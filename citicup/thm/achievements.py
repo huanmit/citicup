@@ -31,14 +31,14 @@ def master_walker(user_id:str):
         res += 1
     return res
 
-# 单次步行2w步,后期注意换算的问题
+# 单次步行1w步,后期注意换算的问题
 def bronze_walker(user_id:str):
     cursor = connection.cursor()
     cursor.execute("select carbonCurrency from footprint where plogtypeid=1 and userid=%s",[user_id])
     results = cursor.fetchall()
 
     for each in results:
-        if each[0] >= 10000: # 建模后要更改
+        if each[0] >= 27: # 建模后要更改
             return True
     return False
 
@@ -49,7 +49,7 @@ def silver_walker(user_id:str):
     results = cursor.fetchall()
     cnt = 0
     for each in results:
-        if each[0] >= 10000:
+        if each[0] >= 27:
             cnt += 1
     if cnt >= 10:
         return True
@@ -62,7 +62,7 @@ def gold_walker(user_id:str):
     results = cursor.fetchall()
     cnt = 0
     for each in results:
-        if each[0] >= 10000:
+        if each[0] >= 27:
             cnt += 1
     if cnt >= 30:
         return True
@@ -76,7 +76,7 @@ def bronze_master_walker(user_id:str):
     sum = 0
     for each in results:
         sum += each[0]
-    if sum >= 1000000:
+    if sum >= 2700:
         return True
     return False
 
@@ -88,7 +88,7 @@ def silver_master_walker(user_id:str):
     sum = 0
     for each in results:
         sum += each[0]
-    if sum >= 5000000:
+    if sum >= 13500:
         return True
     return False
 
@@ -100,7 +100,7 @@ def gold_master_walker(user_id:str):
     sum = 0
     for each in results:
         sum += each[0]
-    if sum >= 10000000:
+    if sum >= 27000:
         return True
     return False
 
@@ -119,13 +119,13 @@ def master_rider(user_id:str):
     sum = 0
     for each in results:
         sum += each[0]
-    if sum >= 1000000:
+    if sum >= 3690: #1000km
         return 3
     else:
-        if sum >= 500000:
+        if sum >= 1845: #500km
             return 2
         else:
-            if sum >= 100000:  
+            if sum >= 369:  #100km
                 return 1 
     return 0    
 
@@ -136,7 +136,7 @@ def bronze_rider(user_id:str):
     results = cursor.fetchall()
 
     for each in results:
-        if each[0] >= 3000: # 建模后要更改
+        if each[0] >= 11: # 建模后要更改
             return 1
     return 0   
 
@@ -147,7 +147,7 @@ def silver_or_gold_rider(user_id:str):
     results = cursor.fetchall()
     cnt = 0
     for each in results:
-        if each[0] >= 3000:
+        if each[0] >= 11:
             cnt += 1
     if cnt >= 30:
         return 2
@@ -197,7 +197,7 @@ def bronze_cutleryGuardian(user_id:str):
     results = cursor.fetchall()
 
     for each in results:
-        if each[0] >= 1: # 建模后要更改
+        if each[0] >= 4: # 建模后要更改
             return True
     return False
 
@@ -208,7 +208,7 @@ def silver_cutleryGuardian(user_id:str):
     results = cursor.fetchall()
     cnt = 0
     for each in results:
-        if each[0] >= 1:
+        if each[0] >= 4:
             cnt += 1
     if cnt >= 10:
         return True
@@ -221,7 +221,7 @@ def gold_cutleryGuardian(user_id:str):
     results = cursor.fetchall()
     cnt = 0
     for each in results:
-        if each[0] >= 1:
+        if each[0] >= 4:
             cnt += 1
     if cnt >= 30:
         return True
@@ -234,7 +234,7 @@ def bronze_traveler(user_id:str):
     results = cursor.fetchall()
 
     for each in results:
-        if each[0] >= 1: # 建模后要更改
+        if each[0] > 0: # 建模后要更改
             return True
     return False
 
@@ -245,7 +245,7 @@ def silver_traveler(user_id:str):
     results = cursor.fetchall()
     cnt = 0
     for each in results:
-        if each[0] >= 1:
+        if each[0] > 0:
             cnt += 1
     if cnt >= 10:
         return True
@@ -258,7 +258,7 @@ def gold_traveler(user_id:str):
     results = cursor.fetchall()
     cnt = 0
     for each in results:
-        if each[0] >= 1:
+        if each[0] > 0:
             cnt += 1
     if cnt >= 30:
         return True
@@ -267,11 +267,10 @@ def gold_traveler(user_id:str):
 # 累计乘坐公共交通50次
 def bronze_master_traveler(user_id:str):
     cursor = connection.cursor()
-    cursor.execute("select carbonCurrency from footprint where plogtypeid=4 and userid=%s",[user_id])
-    results = cursor.fetchall()
-    sum = 0
-    for each in results:
-        sum += each[0]
+    cursor.execute("select count(*) from footprint where plogtypeid=4 and userid=%s",[user_id])
+    results = cursor.fetchone()
+    sum = results[0]
+
     if sum >= 50:
         return True
     return False
@@ -279,11 +278,10 @@ def bronze_master_traveler(user_id:str):
 # 累计乘坐公共交通100次
 def silver_master_traveler(user_id:str):
     cursor = connection.cursor()
-    cursor.execute("select carbonCurrency from footprint where plogtypeid=4 and userid=%s",[user_id])
-    results = cursor.fetchall()
-    sum = 0
-    for each in results:
-        sum += each[0]
+    cursor.execute("select count(*) from footprint where plogtypeid=4 and userid=%s",[user_id])
+    results = cursor.fetchone()
+    sum = results[0]
+
     if sum >= 100:
         return True
     return False
@@ -291,11 +289,10 @@ def silver_master_traveler(user_id:str):
 # 累计乘坐公共交通200次
 def gold_master_traveler(user_id:str):
     cursor = connection.cursor()
-    cursor.execute("select carbonCurrency from footprint where plogtypeid=4 and userid=%s",[user_id])
-    results = cursor.fetchall()
-    sum = 0
-    for each in results:
-        sum += each[0]
+    cursor.execute("select count(*) from footprint where plogtypeid=4 and userid=%s",[user_id])
+    results = cursor.fetchone()
+    sum = results[0]
+    
     if sum >= 200:
         return True
     return False

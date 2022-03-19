@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 
-from thm.views import RegisterAPIView, SearchFootprintAPIView, SearchExchangeAPIView, LikeAPIView, Achievements, WebPlogType, WebGoodType, WebLogin,WebRegister, WebGood, ProcessReport, WebGetReport, Garbage
+from thm.views import RegisterAPIView, SearchFootprintAPIView, SearchExchangeAPIView, LikeAPIView, Achievements, WebPlogType, WebGoodType, WebLogin,WebRegister, WebGood, ProcessReport, WebGetReport, Garbage, CreditsModel, Calculate, CreditHouse
 from zlh.views import UploadStepsAPIView,PostPlogAPIView,ExchangeGoodAPIView,CommentMessageAPIView,LikeMessageAPIView,ReportMessageAPIView
 from mxy.views import LoginAPIView,GetAllGoodsAPIView,GoodTypeAPIView,CategorizedGoodAPIView,GetAllPlogAPIView,PlogTypeAPIView,CategorizedPlogAPIView,GetPlogDetailsAPIView
 from lj.views import GoodAPIView,UserPageAPIView,ReportAPIView,CommentAPIView,UserPlogAPIView
@@ -44,6 +44,9 @@ urlpatterns = [
     path('web/reports/', ProcessReport.as_view()), #处理举报消息
     path('web/get_report/',WebGetReport.as_view()), #获得所有未处理的举报
     path('garbage_classification/',Garbage.as_view()), #垃圾分类
+    path('credits/',CreditsModel.as_view()), #获取用户的碳信用相关信息
+    path('calculate/',Calculate.as_view()), #进行一次评估
+    path('credit_house/',CreditHouse.as_view()), #获取信用等级
     # zlh's part,记得打逗号！
     path('wxsteps_upload/',UploadStepsAPIView.as_view()),  #微信步数兑换
     path('good_exchange/',ExchangeGoodAPIView.as_view()),  #商品兑换

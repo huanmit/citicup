@@ -44,7 +44,7 @@ class UploadStepsAPIView(APIView):
             response = JsonResponse({"status_code":500,"err_msg":"您今日步数已上传，请明天再来！"})
             return response
 
-        cursor.execute("insert into Footprint(userID,carbonCurrency,plogTypeID) values(%s,%s,%s)",[userID,wxSteps,plogTypeID])
+        cursor.execute("insert into Footprint(userID,carbonCurrency,plogTypeID) values(%s,%s,%s)",[userID,coin,plogTypeID])
         cursor.execute("update User set carbonCurrency=carbonCurrency+%s where id=%s",[coin,userID])
         message = "您今日共行走了"+str(wxSteps)+"步，为您收获了"+str(coin)+"枚碳币，感谢您为低碳生活做出的贡献！" 
 
@@ -80,11 +80,10 @@ class ExchangeGoodAPIView(APIView):
             response = JsonResponse({"status_code":500,"error_type":"您的碳币不足！"})
 
         return response
-
-               
+            
 # 发布Plog
 class PostPlogAPIView(APIView):
-    def  post(self,request):
+    def post(self,request):
         data = request.data
         #image = request.FILES.get('img')
         file = request.FILES.get('file')
