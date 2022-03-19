@@ -3,11 +3,6 @@
     <side-bar data-background-color="white">
       <template slot="links">
         <sidebar-link
-          to="/home/dashboard"
-          :name="$t('sidebar.dashboard')"
-          icon="tim-icons icon-cart"
-        />
-        <sidebar-link
           to="/home/goods"
           :name="$t('sidebar.icons')"
           icon="tim-icons icon-cart"

@@ -3,7 +3,7 @@ import DashboardLayout from "@/layout/dashboard/DashboardLayout.vue";
 import NotFound from "@/pages/NotFoundPage.vue";
 
 // Admin pages
-const Dashboard = () => import(/* webpackChunkName: "dashboard" */"@/pages/Dashboard.vue");
+// const Dashboard = () => import(/* webpackChunkName: "dashboard" */"@/pages/Dashboard.vue");
 const GoodType = () => import(/* webpackChunkName: "common" */ "@/pages/GoodType.vue");
 const Goods = () => import(/* webpackChunkName: "common" */ "@/pages/Goods.vue");
 const Typography = () => import(/* webpackChunkName: "common" */ "@/pages/Report.vue");
@@ -30,13 +30,8 @@ const routes = [
   {
     path: "/home",
     component: DashboardLayout,
-    redirect: "/dashboard",
+    redirect: "/goods",
     children: [
-      {
-        path: "dashboard",
-        name: "dashboard",
-        component: Dashboard
-      },
       {
         path: "goodType",
         name: "goodType",

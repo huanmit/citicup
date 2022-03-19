@@ -102,6 +102,20 @@ export default {
       console.log(res.data);
       this.myCollects = res.data;
     });
+    axios.getAllGoodTypes().then((res) => {
+      console.log(res.data);
+      let raw = res.data;
+      let total = [];
+      raw.forEach((item) => {
+        let data = {
+          id: item.id,
+          goodtypename: item.goodTypeName,
+        };
+        total.push(data);
+      });
+      this.goodTypes = total;
+      console.log(this.goodTypes);
+    });
   },
   data() {
     return {
@@ -112,6 +126,7 @@ export default {
       myCollects: [],
       addedGood: {},
       model: {},
+      goodTypes: [],
     };
   },
   methods: {
@@ -155,7 +170,11 @@ export default {
         .catch((err) => {
           console.log(data);
           console.log(err);
-          alert("修改失败");
+          alert(
+            "修改失败\n1)请先检查数值型内容是否正确填入！\n2)商品类型只能在" +
+              this.goodTypes +
+              "中选择"
+          );
         });
     },
     addGood() {
