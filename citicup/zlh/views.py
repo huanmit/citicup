@@ -158,7 +158,7 @@ class CommentMessageAPIView(APIView):
         
         
         if len(results) > 0 :
-            cursor.execute("select * from Comment where plogID in %s",[results])
+            cursor.execute("select * from Comment where plogID in %s order by creattime desc",[results])
             commentInfo = cursor.fetchall()
             print(commentInfo)
             print("info")
@@ -201,7 +201,7 @@ class LikeMessageAPIView(APIView):
         
         
         if len(results) > 0 :
-            cursor.execute("select * from Likes where plogID in %s",[results])
+            cursor.execute("select * from Likes where plogID in %s order by liketime desc",[results])
             likeInfo = cursor.fetchall()
             like_list = []
             for l in likeInfo:
@@ -240,7 +240,7 @@ class ReportMessageAPIView(APIView):
         
         
         if len(results) > 0 :
-            cursor.execute("select * from Reports where plogID in %s",[results])
+            cursor.execute("select * from Reports where plogID in %s order by reporttime desc",[results])
             reportInfo = cursor.fetchall()
                   
             report_list = []
