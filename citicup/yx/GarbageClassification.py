@@ -7,7 +7,8 @@ from efficientnet_pytorch import EfficientNet
 
 
 classes = ['cardboard', 'glass', 'metal', 'paper', 'plastic', 'non-recyclable']
-cn_classes = ['纸板','玻璃','金属','可回收纸','塑料','不可回收垃圾']
+cn_classes = ['纸板', '玻璃', '金属', '可回收纸', '塑料', '不可回收垃圾']
+
 
 class EffNet(nn.Module):
     def __init__(self):
@@ -28,7 +29,8 @@ test_transforms = transforms.Compose([transforms.Resize(256),
 
 
 def load_model():
-    model.load_state_dict(torch.load('./model/weight2.pth',map_location='cpu'))
+    model.load_state_dict(torch.load(
+        './model/weight2.pth', map_location='cpu'))
     model.eval()
 
 
