@@ -1,6 +1,7 @@
 <template>
   <div class="row">
     <div class="col-12">
+      <h2 class="title">商品类型管理</h2>
       <card :title="title">
         <base-button type="primary" @click="showAdd()"
           >增加商品类型</base-button
@@ -69,7 +70,7 @@ export default {
   data() {
     return {
       addVisible: false,
-      title: "商品类型管理",
+      title: "",
       tableData: [],
       tableColumns: ["id", "goodtypename"],
       addedType: {},
@@ -91,7 +92,7 @@ export default {
         .then((res) => {
           console.log(res);
           alert("添加成功");
-          
+
           this.addVisible = false;
           axios.getAllGoodTypes().then((res) => {
             console.log(res.data);

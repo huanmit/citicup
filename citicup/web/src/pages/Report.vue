@@ -1,8 +1,8 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <card :title="title">
-        
+      <h2 class="title">举报管理</h2>
+      <card>
         <div class="table-responsive">
           <base-table
             :data="tableData"

@@ -1,7 +1,8 @@
 <template>
   <div class="row">
     <div class="col-12">
-      <card :title="title">
+      <h2 class="title">帖子类型管理</h2>
+      <card>
         <base-button type="primary" @click="showAdd()"
           >增加帖子类型</base-button
         >

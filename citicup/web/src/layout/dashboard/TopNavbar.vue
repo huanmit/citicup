@@ -43,8 +43,6 @@
               class="search-bar input-group"
               @click="searchModalVisible = true"
             >
-              <!-- <input type="text" class="form-control" placeholder="Search...">
-              <div class="input-group-addon"><i class="tim-icons icon-zoom-split"></i></div> -->
               <button
                 class="btn btn-link"
                 id="search-button"
@@ -53,7 +51,6 @@
               >
                 <i class="tim-icons icon-zoom-split"></i>
               </button>
-              
             </div>
             <modal
               :show.sync="searchModalVisible"
@@ -90,15 +87,8 @@
                   <img src="../../../public/img/anime6.png" />
                 </div>
                 <b class="caret d-none d-lg-block d-xl-block"></b>
-                <p class="d-lg-none">Log out</p>
+                <p class="d-lg-none">退出</p>
               </a>
-              <!-- <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item">Profile</a>
-              </li> -->
-              <!-- <li class="nav-link">
-                <a href="#" class="nav-item dropdown-item">Settings</a>
-              </li> -->
-              <!-- <div class="dropdown-divider"></div> -->
               <li class="nav-link">
                 <router-link to="/login" class="nav-item">
                   <a href="#" class="nav-item dropdown-item"
