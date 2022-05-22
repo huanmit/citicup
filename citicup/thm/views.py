@@ -19,14 +19,17 @@ class RegisterAPIView(APIView):
         phoneNumber = data['phoneNumber']
         try:
             avatarPath = data['avatarPath']
-        except:
+        except ValueError:
             avatarPath = ""
         carbonCurrency = 0
         carbonCredit = 0
         cursor = connection.cursor()
         print(data)
-        cursor.execute("insert into user(id,userName,password,phoneNumber,avatarPath,carbonCurrency,carbonCredit) values(%s,%s,%s,%s,%s,%s,%s)", [
-                       id, userName, password, phoneNumber, avatarPath, carbonCurrency, carbonCredit])
+        cursor.execute("insert into user(id,userName,password,phoneNumber,\
+                       avatarPath,carbonCurrency,carbonCredit)\
+                       values(%s,%s,%s,%s,%s,%s,%s)", [
+                       id, userName, password, phoneNumber, avatarPath,
+                       carbonCurrency, carbonCredit])
         print(JsonResponse.status_code)
         response = JsonResponse(data)
         res = JsonResponse.status_code
@@ -52,10 +55,12 @@ class SearchFootprintAPIView(APIView):
             name = each[1]
             plogType[id] = name
 
-        cursor.execute("select * from footprint where userid=%s and foottime>=%s and foottime<=%s",
+        cursor.execute("select * from footprint\
+                       where userid=%s and foottime>=%s and foottime<=%s",
                        [user_id, time+" 00:00:00", time+" 23:59:59"])
         results = cursor.fetchall()
         cnt = len(results)  # 记录个数
+        print(cnt)
         list = []
         for each in results:
             dict = {}
@@ -76,7 +81,9 @@ class SearchExchangeAPIView(APIView):
         time = data['time']
 
         cursor = connection.cursor()
-        cursor.execute("select goodid from Exchanges where userid=%s and exchangetime>=%s and exchangetime<=%s", [
+        cursor.execute("select goodid from Exchanges\
+                       where userid=%s and exchangetime>=%s\
+                           and exchangetime<=%s", [
                        user_id, time+" 00:00:00", time+" 23:59:59"])
         results = cursor.fetchall()
         # 没有记录
@@ -134,7 +141,10 @@ class Achievements(APIView):
         num_clothes = clothes(user_id)  # 5.爱心使者 #####
         num_master_clothes = clothes_lover(user_id)  # 10.爱心大使 #####
 
-        return JsonResponse([num_walker, num_rider, num_cg, num_traveler, num_clothes, num_master_walker, num_master_rider, num_chop, num_master_traveler, num_master_clothes], safe=False)
+        return JsonResponse([num_walker, num_rider, num_cg, num_traveler,
+                            num_clothes, num_master_walker, num_master_rider,
+                            num_chop, num_master_traveler, num_master_clothes],
+                            safe=False)
 
 
 class WebPlogType(APIView):
@@ -142,18 +152,20 @@ class WebPlogType(APIView):
         data = request.query_params
         id = data.get('id', None)
         cursor = connection.cursor()
-        sql = "select id,typeName,typeCarbonCurrency from plogType where id =%s"
+        sql = "select id,typeName,typeCarbonCurrency from plogType\
+            where id =%s"
         cursor.execute(sql, [id])
         connection.commit()
         results = cursor.fetchall()
         try:
             result = results[0]
-        except:
+        except ValueError:
             return JsonResponse({"status_code": JsonResponse.status_code})
 
         response = []
         response.append(
-            {'id': result[0], 'typeName': result[1], 'typeCarbonCurrency': result[2]})
+            {'id': result[0], 'typeName': result[1],
+             'typeCarbonCurrency': result[2]})
         cursor.close()
         return JsonResponse(response, safe=False)
 
@@ -165,8 +177,8 @@ class WebPlogType(APIView):
             return JsonResponse({"error_tip": "汇率应为数字"})
 
         cursor = connection.cursor()
-        cursor.execute("insert into plogtype (typename,typecarboncurrency) values(%s,%s)", [
-                       type_name, type_coin])
+        cursor.execute("insert into plogtype (typename,typecarboncurrency)\
+            values(%s,%s)", [type_name, type_coin])
 
         res = JsonResponse.status_code
         response = JsonResponse({"status_code": res})
@@ -187,7 +199,8 @@ class WebPlogType(APIView):
                 "update plogtype set typename=%s where id=%s", [type_name, id])
         if type_coin != "":
             cursor.execute(
-                "update plogtype set typeCarbonCurrency=%s where id=%s", [type_coin, id])
+                "update plogtype set typeCarbonCurrency=%s where id=%s",
+                [type_coin, id])
 
         res = JsonResponse.status_code
         response = JsonResponse({"status_code": res})
@@ -215,7 +228,7 @@ class WebGoodType(APIView):
         results = cursor.fetchall()
         try:
             result = results[0]
-        except:
+        except ValueError:
             return JsonResponse({"status_code": JsonResponse.status_code})
 
         response = []
@@ -242,7 +255,8 @@ class WebGoodType(APIView):
 
         if type_name != "":
             cursor.execute(
-                "update goodtype set goodtypename=%s where id=%s", [type_name, id])
+                "update goodtype set goodtypename=%s where id=%s",
+                [type_name, id])
 
         res = JsonResponse.status_code
         response = JsonResponse({"status_code": res})
@@ -273,8 +287,8 @@ class WebRegister(APIView):
         if results == 1:
             return JsonResponse({"error_tip": "改用户id已被注册"})
 
-        cursor.execute("insert into adminuser(id,adminuserName,password) values(%s,%s,%s)", [
-                       id, userName, password])
+        cursor.execute("insert into adminuser(id,adminuserName,password)\
+            values(%s,%s,%s)", [id, userName, password])
 
         response = JsonResponse(data)
         res = JsonResponse.status_code
@@ -299,7 +313,8 @@ class WebLogin(APIView):
         password = data['password']
         cursor = connection.cursor()
         cursor.execute(
-            "select id,password from adminuser where id=%s and password=%s", [id, password])
+            "select id,password from adminuser where id=%s and password=%s",
+            [id, password])
         results = cursor.rowcount
         if results == 1:
             token = token_md5(id)
@@ -321,8 +336,12 @@ class WebGood(APIView):
         image_path = data['image_path']
 
         cursor = connection.cursor()
-        cursor.execute("insert into good (goodname,goodtype,gooddescription,goodcarboncurrency,goodleft,imagepath) values(%s,%s,%s,%s,%s,%s)", [
-                       good_name, good_type, good_description, good_carboncurrency, good_left, image_path])
+        cursor.execute("insert into good (goodname,goodtype,gooddescription,\
+                        goodcarboncurrency,goodleft,imagepath)\
+                        values(%s,%s,%s,%s,%s,%s)", [good_name, good_type,
+                                                     good_description,
+                                                     good_carboncurrency,
+                                                     good_left, image_path])
 
         res = JsonResponse.status_code
         response = JsonResponse({"status_code": res})
@@ -339,8 +358,11 @@ class WebGood(APIView):
         id = data['id']
 
         cursor = connection.cursor()
-        cursor.execute("update good set goodname=%s,goodtype=%s,gooddescription=%s,goodcarboncurrency=%s,goodleft=%s,imagepath=%s where id=%s", [
-                       good_name, good_type, good_description, good_carboncurrency, good_left, image_path, id])
+        cursor.execute("update good set goodname=%s,goodtype=%s,\
+            gooddescription=%s,goodcarboncurrency=%s,goodleft=%s,imagepath=%s\
+                where id=%s", [
+                       good_name, good_type, good_description,
+                       good_carboncurrency, good_left, image_path, id])
 
         res = JsonResponse.status_code
         response = JsonResponse({"status_code": res})
@@ -367,7 +389,8 @@ class ProcessReport(APIView):
         result_detail = data['result_detail']
 
         cursor = connection.cursor()
-        cursor.execute("insert into reportprocess (reportid,adminuser,result,resultdetail) values(%s,%s,%s,%s)", [
+        cursor.execute("insert into reportprocess \
+            (reportid,adminuser,result,resultdetail) values(%s,%s,%s,%s)", [
                        report_id, admin_user, result, result_detail])
 
         cursor.execute("select plogid from reports where id=%s", [report_id])
@@ -380,13 +403,17 @@ class ProcessReport(APIView):
             results = cursor.fetchall()
             user_id = results[0][0]  # string
             plog_name = results[0][1]
+            print(plog_name)
 
-            cursor.execute("update plog set plogname=%s,plogcontent=%s,imagepath=%s where id=%s", [
+            cursor.execute("update plog set plogname=%s,plogcontent=%s,\
+                imagepath=%s where id=%s", [
                            "这条帖子不见了噢", "这条帖子不见了噢", "", plog_id])
             cursor.execute(
-                "update user set carboncurrency=carboncurrency-100 where id=%s", [user_id])
+                "update user set carboncurrency=carboncurrency-100\
+                    where id=%s", [user_id])
             cursor.execute(
-                "insert into footprint (userid,plogtypeid,carboncurrency) values(%s,10,%s)", [user_id, -100])
+                "insert into footprint (userid,plogtypeid,carboncurrency)\
+                    values(%s,10,%s)", [user_id, -100])
 
         cursor.execute(
             "update reports set status=1 where plogid=%s", [plog_id])
@@ -417,6 +444,7 @@ class WebGetReport(APIView):
         print(list)
 
         res = JsonResponse.status_code
+        print(res)
         response = JsonResponse(list, safe=False)
         return response
 
@@ -427,9 +455,10 @@ class WebGetReport(APIView):
 class Garbage(APIView):
     def post(self, request):
         data = request.data
+        print(data)
         file = request.FILES.get('file')
-        #file_dir = os.path.join(os.getcwd(), 'upload_images')
-        #file_path = os.path.join(file_dir, image_name)
+        # file_dir = os.path.join(os.getcwd(), 'upload_images')
+        # file_path = os.path.join(file_dir, image_name)
 
         pred = GC.predict_img(file)
         print(pred)
@@ -447,7 +476,8 @@ class CreditsModel(APIView):
 
         # order by time    desc
         cursor.execute(
-            "select * from carboncredits where userid=%s order by date desc", [user_id])
+            "select * from carboncredits where userid=%s order by date desc",
+            [user_id])
         res = cursor.fetchall()
         if len(res) == 1:
             dict['old'] = ["-", "0", "0%", "0%", "0%", "0%", "0%"]
