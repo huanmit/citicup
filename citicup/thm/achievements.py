@@ -12,9 +12,8 @@ def walker(user_id: str):
         res += 1
     return res
 
+
 # 6.步行达人，金银铜
-
-
 def master_walker(user_id: str):
     res = 0
     if bronze_master_walker(user_id):
@@ -25,9 +24,8 @@ def master_walker(user_id: str):
         res += 1
     return res
 
+
 # 单次步行1w步,后期注意换算的问题
-
-
 def bronze_walker(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -40,9 +38,8 @@ def bronze_walker(user_id: str):
             return True
     return False
 
+
 # 累计上传步行10天
-
-
 def silver_walker(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -57,9 +54,8 @@ def silver_walker(user_id: str):
         return True
     return False
 
+
 # 累计上传步行30天
-
-
 def gold_walker(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -74,9 +70,8 @@ def gold_walker(user_id: str):
         return True
     return False
 
+
 # 100w步
-
-
 def bronze_master_walker(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -90,9 +85,8 @@ def bronze_master_walker(user_id: str):
         return True
     return False
 
+
 # 500w步
-
-
 def silver_master_walker(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -106,9 +100,8 @@ def silver_master_walker(user_id: str):
         return True
     return False
 
+
 # 1000w步
-
-
 def gold_master_walker(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -122,18 +115,16 @@ def gold_master_walker(user_id: str):
         return True
     return False
 
+
 # lj's part
 # 2.骑行者，金银铜
-
-
 def rider(user_id: str):
     res = 0
     res = bronze_rider(user_id) + silver_or_gold_rider(user_id)
     return res
 
+
 # 7.骑行达人，金银铜
-
-
 def master_rider(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -153,9 +144,8 @@ def master_rider(user_id: str):
                 return 1
     return 0
 
+
 # 单次骑行3km,后期注意换算的问题
-
-
 def bronze_rider(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -168,9 +158,8 @@ def bronze_rider(user_id: str):
             return 1
     return 0
 
+
 # 累计上传骑行数据10天或者30天以上
-
-
 def silver_or_gold_rider(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -188,10 +177,9 @@ def silver_or_gold_rider(user_id: str):
             return 1
     return 0
 
+
 # mxy's part
 # 3.餐具卫士，金银铜
-
-
 def cutleryGuardian(user_id: str):
     res = 0
     if bronze_cutleryGuardian(user_id):
@@ -202,9 +190,8 @@ def cutleryGuardian(user_id: str):
         res += 1
     return res
 
+
 # 4.未来旅客，金银铜
-
-
 def traveler(user_id: str):
     res = 0
     if bronze_traveler(user_id):
@@ -215,9 +202,8 @@ def traveler(user_id: str):
         res += 1
     return res
 
+
 # 9.步未来旅行家，金银铜
-
-
 def master_traveler(user_id: str):
     res = 0
     if bronze_master_traveler(user_id):
@@ -228,9 +214,8 @@ def master_traveler(user_id: str):
         res += 1
     return res
 
+
 # 使用可回收餐具1次,后期注意换算的问题
-
-
 def bronze_cutleryGuardian(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -243,9 +228,8 @@ def bronze_cutleryGuardian(user_id: str):
             return True
     return False
 
+
 # 累计使用可回收餐具10天
-
-
 def silver_cutleryGuardian(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -260,9 +244,8 @@ def silver_cutleryGuardian(user_id: str):
         return True
     return False
 
+
 # 累计使用可回收餐具30天
-
-
 def gold_cutleryGuardian(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -277,9 +260,8 @@ def gold_cutleryGuardian(user_id: str):
         return True
     return False
 
+
 # 乘坐公共交通1次,后期注意换算的问题
-
-
 def bronze_traveler(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -292,9 +274,8 @@ def bronze_traveler(user_id: str):
             return True
     return False
 
+
 # 累计乘坐公共交通10天
-
-
 def silver_traveler(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -309,9 +290,8 @@ def silver_traveler(user_id: str):
         return True
     return False
 
+
 # 累计乘坐公共交通30天
-
-
 def gold_traveler(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -326,9 +306,8 @@ def gold_traveler(user_id: str):
         return True
     return False
 
+
 # 累计乘坐公共交通50次
-
-
 def bronze_master_traveler(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -341,9 +320,8 @@ def bronze_master_traveler(user_id: str):
         return True
     return False
 
+
 # 累计乘坐公共交通100次
-
-
 def silver_master_traveler(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -356,9 +334,8 @@ def silver_master_traveler(user_id: str):
         return True
     return False
 
+
 # 累计乘坐公共交通200次
-
-
 def gold_master_traveler(user_id: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -371,10 +348,9 @@ def gold_master_traveler(user_id: str):
         return True
     return False
 
+
 # zlh's part
 # 8.餐具收藏家 #
-
-
 def chop_collector(userID: str):
     res = 0
     if third_chop(userID):
@@ -385,9 +361,8 @@ def chop_collector(userID: str):
         res += 1
     return res  # res为1：餐具收藏家（铜），2:银，3:金
 
+
 # 累计上传50次
-
-
 def third_chop(userID: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -399,9 +374,8 @@ def third_chop(userID: str):
         res = True
     return res
 
+
 # 累计上传100次
-
-
 def second_chop(userID: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -413,9 +387,8 @@ def second_chop(userID: str):
         res = True
     return res
 
+
 # 累计上传200次
-
-
 def first_chop(userID: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -427,18 +400,16 @@ def first_chop(userID: str):
         res = True
     return res
 
+
 # 5.爱心使者 #
-
-
 def clothes(userID: str):
     res = 0
     if bronze_clothes(userID):
         res += 1
     return res  # res为1：爱心使者（金）
 
+
 # 衣物回收一次
-
-
 def bronze_clothes(userID: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -450,9 +421,8 @@ def bronze_clothes(userID: str):
         res = True
     return res
 
+
 # 10.爱心大使 #
-
-
 def clothes_lover(userID: str):
     res = 0
     if third_clothes(userID):
@@ -463,9 +433,8 @@ def clothes_lover(userID: str):
         res += 1
     return res  # res为1：爱心大使（铜），2:银，3:金
 
+
 # 衣物回收累计10次
-
-
 def third_clothes(userID: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -477,9 +446,8 @@ def third_clothes(userID: str):
         res = True
     return res
 
+
 # 衣物回收累计20次
-
-
 def second_clothes(userID: str):
     cursor = connection.cursor()
     cursor.execute(
@@ -491,9 +459,8 @@ def second_clothes(userID: str):
         res = True
     return res
 
+
 # 衣物回收累计50次
-
-
 def first_clothes(userID: str):
     cursor = connection.cursor()
     cursor.execute(
