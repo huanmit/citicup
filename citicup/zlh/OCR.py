@@ -1,21 +1,24 @@
 # This is a sample Python script.
 import base64
 import json
-import jsonpath
-import datefinder
+# import jsonpath
+# import datefinder
 import re
 import datetime
 
 from tencentcloud.common import credential
 from tencentcloud.common.profile.client_profile import ClientProfile
 from tencentcloud.common.profile.http_profile import HttpProfile
-from tencentcloud.common.exception.tencent_cloud_sdk_exception import TencentCloudSDKException
+from tencentcloud.common.exception.tencent_cloud_sdk_exception import \
+    TencentCloudSDKException
 from tencentcloud.ocr.v20181119 import ocr_client, models
 
 
-def img2text(f):#ile_path):
+def img2text(f):  # ile_path):
     try:
-        cred = credential.Credential("AKIDXtymLdf6HCqDI7fwwf7ICqDJ8gyzjCNH", "e18yNYS7XgZBWaMs74k8GWZNwGK8g5D4")
+        cred = credential.Credential(
+            "AKIDXtymLdf6HCqDI7fwwf7ICqDJ8gyzjCNH",
+            "e18yNYS7XgZBWaMs74k8GWZNwGK8g5D4")
         httpProfile = HttpProfile()
         httpProfile.endpoint = "ocr.tencentcloudapi.com"
 
@@ -99,8 +102,8 @@ def extract_cloth_recycle(json_string):
                 break
         start = 0
     for each in weight:
-        a=ord(each)
-        if a in range(48,58):
+        a = ord(each)
+        if a in range(48, 58):
             start = weight.find(each)
             break
     weight = weight[start:]
@@ -122,6 +125,7 @@ def extract_public_transport(json_string):
     img_date = None
     cur_date = datetime.date.today().strftime("%Y-%m-%d")
     flag = 0
+    print(img_date, cur_date, flag)
     for i in range(len(dic['TextDetections'])):
         # print(dic['TextDetections'][i]['DetectedText'])
         text = dic['TextDetections'][i]['DetectedText']
@@ -149,7 +153,8 @@ def extract_public_transport(json_string):
 def extract_text(file_path, type):
     """
     :param file_path: string, relative or absolute path of image
-    :param type: string, type of extract behavior, ['bike', 'cloth', 'food', 'pub_trans']
+    :param type: string, type of extract behavior, \
+                ['bike', 'cloth', 'food', 'pub_trans']
     :return: string, extacted value
     """
     resp = img2text(file_path)
