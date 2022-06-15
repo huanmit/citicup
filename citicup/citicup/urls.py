@@ -5,7 +5,7 @@ from thm.views import RegisterAPIView, SearchFootprintAPIView,\
     SearchExchangeAPIView, LikeAPIView, Achievements,\
     WebPlogType, WebGoodType, WebLogin, WebRegister,\
     WebGood, ProcessReport, WebGetReport, Garbage,\
-    CreditsModel, Calculate, CreditHouse
+    CreditsModel, Calculate, CreditHouse, VoiceInteraction
 from zlh.views import UploadStepsAPIView, PostPlogAPIView,\
     ExchangeGoodAPIView, CommentMessageAPIView,\
     LikeMessageAPIView, ReportMessageAPIView
@@ -42,6 +42,7 @@ urlpatterns = [
     path('credits/', CreditsModel.as_view()),  # 获取用户的碳信用相关信息
     path('calculate/', Calculate.as_view()),  # 进行一次评估
     path('credit_house/', CreditHouse.as_view()),  # 获取信用等级
+    path('voice/',VoiceInteraction.as_view()), #语音交互
     # zlh's part,记得打逗号！
     path('wxsteps_upload/', UploadStepsAPIView.as_view()),  # 微信步数兑换
     path('good_exchange/', ExchangeGoodAPIView.as_view()),  # 商品兑换

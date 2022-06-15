@@ -3,19 +3,20 @@ from bert_serving.client import BertClient
 import speech_recognition as sr
 import numpy as np
 
+
 # Working with audio files
 r = sr.Recognizer()
-# bc = BertClient(ip='10.60.38.173',check_length=False)# ip中是部署了bert模型的服务器地址
+bc = BertClient(ip='139.224.100.23')# ip中是部署了bert模型的服务器地址
 
 stc = [
-    "过去一个月我在碳币排行榜上排多少名",
+    "为我解读一下我这个月的碳信用",
     "我现在有多少碳币",
     "我的碳信用分数是多少",
 ]
 vec = []
-#vec = bc.encode(stc)
-#np.save('./bert_vec.npy',vec)
-input_vec = np.load('./input.npy')
+vec = bc.encode(stc)
+np.save('./bert_vec.npy',vec)
+input_vec = []
 vec = np.load('./bert_vec.npy')
 
 
@@ -26,8 +27,10 @@ with microphone as source:
     r.adjust_for_ambient_noise(source)
     audio = r.listen(source)
 try:
+    print('录音结束')
     # sentence = r.recognize_sphinx(audio)
     input_sentence = r.recognize_google(audio,language="cmn-Hans-CN") #简体中文
+    print('识别结束')
     # 计算用户说的句子的bert向量
     input_vec = bc.encode([input_sentence])
     print(input_sentence)
