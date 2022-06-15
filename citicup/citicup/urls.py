@@ -12,7 +12,7 @@ from zlh.views import UploadStepsAPIView, PostPlogAPIView,\
 from mxy.views import LoginAPIView, GetAllGoodsAPIView, GoodTypeAPIView,\
     CategorizedGoodAPIView, GetAllPlogAPIView,\
     PlogTypeAPIView, CategorizedPlogAPIView,\
-    GetPlogDetailsAPIView
+    GetPlogDetailsAPIView,SearchForPlogAPIView,SearchForGoodAPIView
 from lj.views import GoodAPIView, UserPageAPIView, ReportAPIView,\
     CommentAPIView, UserPlogAPIView
 
@@ -61,6 +61,8 @@ urlpatterns = [
     # 首页获取某个分类的所有商品
     path('categorized_plog/', CategorizedPlogAPIView.as_view()),
     path('plog_details/', GetPlogDetailsAPIView.as_view()),  # 查看某条帖子详情页
+    path('search_plog/', SearchForPlogAPIView.as_view()),  # 搜索帖子
+    path('search_good/', SearchForGoodAPIView.as_view()),  # 搜索商品
 
     # lj's part,记得打逗号！
     path('good/', GoodAPIView.as_view()),  # 商品详情页

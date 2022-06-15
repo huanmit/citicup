@@ -265,3 +265,132 @@ class AchievementsM(APIView):
         return JsonResponse([num_cutleryGuardian, num_traveler,
                             num_master_traveler], safe=False)
         # return JsonResponse([0,0,0,0,0,0,0,0,0,0],safe = False)
+
+
+# 搜索帖子
+class SearchForPlogAPIView(APIView):
+    def get(self, request):
+        data = request.query_params
+        Content = data['searchContent']
+        searchContent='%'+Content+'%'
+        plog_list = []
+        cursor = connection.cursor()
+        #全字段搜索
+        cursor.execute(
+            "select id,userID,plogTypeID,imagePath,creatTime,\
+            plogName,plogContent from plog where plogName LIKE %s or plogContent LIKE %s", [searchContent,searchContent])
+        results = cursor.fetchall()
+        plog_list1 = []
+        for plog in results:
+            plog_item = {}
+            plog_item["id"] = plog[0]
+            plog_item["userID"] = plog[1]
+            plog_item["plogTypeID"] = plog[2]
+            plog_item["imagePath"] = plog[3]
+            plog_item["creatTime"] = plog[4]
+            plog_item["plogName"] = plog[5]
+            plog_item["plogContent"] = plog[6]
+            plog_list1.append(plog_item)
+        plog_list.append(plog_list1)
+        #仅标题搜索
+        cursor.execute(
+            "select id,userID,plogTypeID,imagePath,creatTime,\
+            plogName,plogContent from plog where plogName LIKE %s ", [searchContent])
+        results = cursor.fetchall()
+        plog_list2 = []
+        for plog in results:
+            plog_item = {}
+            plog_item["id"] = plog[0]
+            plog_item["userID"] = plog[1]
+            plog_item["plogTypeID"] = plog[2]
+            plog_item["imagePath"] = plog[3]
+            plog_item["creatTime"] = plog[4]
+            plog_item["plogName"] = plog[5]
+            plog_item["plogContent"] = plog[6]
+            plog_list2.append(plog_item)
+        plog_list.append(plog_list2)
+        #仅内容搜索
+        cursor.execute(
+            "select id,userID,plogTypeID,imagePath,creatTime,\
+            plogName,plogContent from plog where plogContent LIKE %s ", [searchContent])
+        results = cursor.fetchall()
+        plog_list3 = []
+        for plog in results:
+            plog_item = {}
+            plog_item["id"] = plog[0]
+            plog_item["userID"] = plog[1]
+            plog_item["plogTypeID"] = plog[2]
+            plog_item["imagePath"] = plog[3]
+            plog_item["creatTime"] = plog[4]
+            plog_item["plogName"] = plog[5]
+            plog_item["plogContent"] = plog[6]
+            plog_list3.append(plog_item)
+        plog_list.append(plog_list3)
+        cursor.close()
+        res = JsonResponse.status_code
+        if res == 200:
+            response = JsonResponse(plog_list, safe=False)
+            return response
+        else:
+            return JsonResponse({"status_code": res})
+
+# 搜索商品
+class SearchForGoodAPIView(APIView):
+    def get(self, request):
+        data = request.query_params
+        Content = data['searchContent']
+        searchContent='%'+Content+'%'
+        good_list = []
+        cursor = connection.cursor()
+        #全字段搜索
+        cursor.execute( "select id,goodName,goodType,goodCarbonCurrency,imagePath\
+              from good where goodName LIKE %s or goodDescription LIKE %s",[searchContent,searchContent])
+        connection.commit()
+        results = cursor.fetchall()
+        good_list1 = []
+        for good in results:
+            good_item = {}
+            good_item["id"] = good[0]
+            good_item["goodName"] = good[1]
+            good_item["goodType"] = good[2]
+            good_item["goodCarbonCurrency"] = good[3]
+            good_item["imagePath"] = good[4]
+            good_list1.append(good_item)
+        good_list.append(good_list1)
+        #商品名字搜索
+        cursor.execute( "select id,goodName,goodType,goodCarbonCurrency,imagePath\
+              from good where goodName LIKE %s",[searchContent])
+        connection.commit()
+        results = cursor.fetchall()
+        good_list2 = []
+        for good in results:
+            good_item = {}
+            good_item["id"] = good[0]
+            good_item["goodName"] = good[1]
+            good_item["goodType"] = good[2]
+            good_item["goodCarbonCurrency"] = good[3]
+            good_item["imagePath"] = good[4]
+            good_list2.append(good_item)
+        good_list.append(good_list2)
+        #商品描述搜索
+        cursor.execute( "select id,goodName,goodType,goodCarbonCurrency,imagePath\
+              from good where goodDescription LIKE %s",[searchContent])
+        connection.commit()
+        results = cursor.fetchall()
+        good_list3 = []
+        for good in results:
+            good_item = {}
+            good_item["id"] = good[0]
+            good_item["goodName"] = good[1]
+            good_item["goodType"] = good[2]
+            good_item["goodCarbonCurrency"] = good[3]
+            good_item["imagePath"] = good[4]
+            good_list3.append(good_item)
+        good_list.append(good_list3)
+        cursor.close()
+        res = JsonResponse.status_code
+        if res == 200:
+            response = JsonResponse(good_list, safe=False)
+            return response
+        else:
+            return JsonResponse({"status_code": res})
