@@ -53,6 +53,7 @@ class UserPageAPIView(APIView):
         result_plog = results[0]
 
         # 获得最近获得的成就
+        '''
         sql = "select achievement.achievementName \
             from achieves,achievement \
             where userId =%s and achieves.achievementId = achievement.id \
@@ -61,10 +62,11 @@ class UserPageAPIView(APIView):
         connection.commit()
         results = cursor.fetchall()
         try:
+            print(results)
             result_achieve = results[0]
         except ValueError:
             result_achieve = [""]
-
+        '''
         cursor.close()
         response = []
         response.append({'id': result_user[0], 'userName': result_user[1],
@@ -73,7 +75,8 @@ class UserPageAPIView(APIView):
                          'carbonCurrency': result_user[4],
                          'carbonCredit': result_user[5],
                          'plogNum': result_plog[0],
-                         'lastAchievement': result_achieve[0]})
+                         #'lastAchievement': result_achieve[0]
+                         })
         return JsonResponse(response, safe=False)
 
 

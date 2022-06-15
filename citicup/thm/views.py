@@ -8,6 +8,7 @@ import thm.GarbageClassification as GC
 import hashlib
 import time
 import thm.credits as cmodel
+import os
 
 from bert_serving.client import BertClient
 import speech_recognition as sr
@@ -540,7 +541,8 @@ class VoiceInteraction(APIView):
         ]
         vec = []
         input_vec = []
-        vec = np.load('./bert_vec.npy')
+        print(os.getcwd())
+        vec = np.load('./thm/bert_vec.npy')
 
         # 录音、识别
         print("您可以向我查询碳币、碳信用等等..."+'\n'+'请说话：')
@@ -558,7 +560,7 @@ class VoiceInteraction(APIView):
             print(input_sentence)
         except:
             print("无法识别出句子，请重试。")
-            return -1
+            return JsonResponse({'index': 1})
 
         
         # 将输入句子的向量与预设句子的向量一一求出余弦值，与余弦值最大的匹配成功
@@ -572,5 +574,5 @@ class VoiceInteraction(APIView):
         index = cos_input.index(max(cos_input))
         print('检测到输入应为预设库中的第'+str(index+1)+'条，“',stc[index]+'”')
         #cos_input = a.dot(b) / (np.linalg.norm(a) * np.linalg.norm(b))
-
-        return index
+        print(index)
+        return JsonResponse({'index': index})
