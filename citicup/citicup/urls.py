@@ -5,7 +5,7 @@ from thm.views import RegisterAPIView, SearchFootprintAPIView,\
     SearchExchangeAPIView, LikeAPIView, Achievements,\
     WebPlogType, WebGoodType, WebLogin, WebRegister,\
     WebGood, ProcessReport, WebGetReport, Garbage,\
-    CreditsModel, Calculate, CreditHouse, VoiceInteraction
+    CreditsModel, Calculate, CreditHouse, VoiceInteraction, ImageSearch
 from zlh.views import UploadStepsAPIView, PostPlogAPIView,\
     ExchangeGoodAPIView, CommentMessageAPIView,\
     LikeMessageAPIView, ReportMessageAPIView
@@ -43,6 +43,7 @@ urlpatterns = [
     path('calculate/', Calculate.as_view()),  # 进行一次评估
     path('credit_house/', CreditHouse.as_view()),  # 获取信用等级
     path('voice/',VoiceInteraction.as_view()), #语音交互
+    path('image_search/',ImageSearch.as_view()), #图片搜索
     # zlh's part,记得打逗号！
     path('wxsteps_upload/', UploadStepsAPIView.as_view()),  # 微信步数兑换
     path('good_exchange/', ExchangeGoodAPIView.as_view()),  # 商品兑换
@@ -58,8 +59,7 @@ urlpatterns = [
     path('categorized_good/', CategorizedGoodAPIView.as_view()),  # 获取某个分类的所有商品
     path('get_plog/', GetAllPlogAPIView.as_view()),  # 首页获取全部帖子
     path('plog_type/', PlogTypeAPIView.as_view()),  # 首页获取帖子分类
-    # 首页获取某个分类的所有商品
-    path('categorized_plog/', CategorizedPlogAPIView.as_view()),
+    path('categorized_plog/', CategorizedPlogAPIView.as_view()), # 首页获取某个分类的所有商品
     path('plog_details/', GetPlogDetailsAPIView.as_view()),  # 查看某条帖子详情页
     path('search_plog/', SearchForPlogAPIView.as_view()),  # 搜索帖子
     path('search_good/', SearchForGoodAPIView.as_view()),  # 搜索商品

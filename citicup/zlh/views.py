@@ -31,19 +31,21 @@ class UploadStepsAPIView(APIView):
         cursor = connection.cursor()
 
         today = str(datetime.date.today())
-        cursor.execute("select count(*) from footprint where userid=%s and\
-                       plogtypeid=1 and foottime>=%s and foottime<=%s",
+        cursor.execute("select count(*) from footprint where userid=%s and plogtypeid=1 and foottime>=%s and foottime<=%s",
                        [userID, today+" 00:00:00", today+" 23:59:59"])
         dates = cursor.fetchone()[0]
         if dates == 1:
             print("catch!!!!")
             response = JsonResponse(
-                {"status_code": 500, "err_msg": "您今日步数已上传，请明天再来！"})
+                {"status_code": 201, "err_msg": "您今日步数已上传，请明天再来！"})
             return response
 
-        cursor.execute("insert into Footprint(userID,carbonCurrency,plogTypeID) \
-                       values(%s,%s,%s)", [
-                       userID, coin, plogTypeID])
+        if coin == 0:
+            response = JsonResponse(
+                {"status_code": 202, "err_msg": "您目前步数只有"+str(wxSteps)+"步，尚不够兑换碳币，请再走走！"})
+            return response
+
+        cursor.execute("insert into Footprint(userID,carbonCurrency,plogTypeID) values(%s,%s,%s)", [userID, coin, plogTypeID])
         cursor.execute(
             "update User set carbonCurrency=carbonCurrency+%s where id=%s",
             [coin, userID])

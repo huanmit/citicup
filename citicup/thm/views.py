@@ -14,6 +14,18 @@ from bert_serving.client import BertClient
 import speech_recognition as sr
 import numpy as np
 
+from werkzeug.utils import secure_filename
+import shutil 
+from thm.search import recommend
+import tarfile
+from datetime import datetime
+from scipy import ndimage
+
+UPLOAD_FOLDER = 'uploads'
+ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
+from tensorflow.python.platform import gfile
+
+
 class RegisterAPIView(APIView):
     def post(self, request):
         data = request.data
@@ -576,3 +588,55 @@ class VoiceInteraction(APIView):
         #cos_input = a.dot(b) / (np.linalg.norm(a) * np.linalg.norm(b))
         print(index)
         return JsonResponse({'index': index})
+
+class ImageSearch(APIView):
+    def get(self,request):
+        file = request.FILES.get('file')
+        result = 'static/result'
+        if not gfile.Exists(result):
+            os.mkdir(result)
+        shutil.rmtree(result)
+
+        extracted_features=np.zeros((10000,2048),dtype=np.float32)
+        with open('saved_features_recom.txt') as f:
+                    for i,line in enumerate(f):
+                        extracted_features[i,:]=line.split()
+        print("loaded extracted_features") 
+
+        if file:# and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            inputloc = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            recommend(inputloc, extracted_features)
+            os.remove(inputloc)
+            image_path = "/result"
+            image_list =[os.path.join(image_path, file) for file in os.listdir(result)
+                              if not file.startswith('.')]
+            images = {
+                'image0':image_list[0],
+                'image1':image_list[1]
+		    }				
+
+        
+        cursor = connection.cursor()
+        sql = "select id,goodName,goodType,goodCarbonCurrency,imagePath\
+              from good"
+        cursor.execute(sql)
+        connection.commit()
+        results = cursor.fetchall()
+        good_list = []
+        for good in results:
+            good_item = {}
+            good_item["id"] = good[0]
+            good_item["goodName"] = good[1]
+            good_item["goodType"] = good[2]
+            good_item["goodCarbonCurrency"] = good[3]
+            good_item["imagePath"] = good[4]
+            good_list.append(good_item)
+        cursor.close()
+        res = JsonResponse.status_code
+        if res == 200:
+            response = JsonResponse(good_list, safe=False)
+            return response
+        else:
+            return JsonResponse({"status_code": res}) 
